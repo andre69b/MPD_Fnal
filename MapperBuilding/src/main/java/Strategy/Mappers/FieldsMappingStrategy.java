@@ -1,31 +1,12 @@
 package Strategy.Mappers;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
+import java.lang.reflect.Member;
 
 import DataBaseObject.PrimaryKey;
 import MapperBuilder.ColumnInfo;
 
 public class FieldsMappingStrategy extends AbstractMapping {
-
-	@Override
-	protected <T> List<ColumnInfo> getColumnInfoAndFillPrimaryKey(
-			Class<T> klass, ColumnInfo primaryKey) {
-		Field[] Fields = klass.getFields();
-		List<ColumnInfo> ret = new ArrayList<>(Fields.length);
-		ColumnInfo ci;
-		for (Field field : Fields) {
-			ci=new FieldsColumnInfo(field);
-			ret.add(ci);
-			if(primaryKey!=null){
-				PrimaryKey pka = field.getAnnotation(PrimaryKey.class);
-				if(pka!=null)
-					primaryKey=ci;
-			}
-		}
-		return ret;
-	}
 	
 	private class FieldsColumnInfo implements ColumnInfo{
 		Field field;
@@ -48,6 +29,21 @@ public class FieldsMappingStrategy extends AbstractMapping {
 			}
 			return ret;
 		}
-		
+	}
+
+	@Override
+	protected <T> Member[] getMembers(Class<T> klass) {
+		return klass.getFields();
+	}
+
+	@Override
+	protected ColumnInfo getColumnInfo(Member member) {
+		return new FieldsColumnInfo((Field)member);
+	}
+
+	@Override
+	protected boolean checkPrimaryKeyAnnotation(Member member) {
+		PrimaryKey pka = ((Field)member).getAnnotation(PrimaryKey.class);
+		return pka!=null;
 	}
 }
