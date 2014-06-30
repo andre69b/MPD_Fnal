@@ -17,10 +17,4 @@ public class SingleCall extends AbstractConnection {
 	        throw new RuntimeException(ex);
 		}
 	}
-	public void close() throws Exception {
-        if (connection != null) {
-        	connection.close();
-        	connection = null;
-        }
-    }
 }

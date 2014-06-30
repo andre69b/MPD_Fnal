@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import DataBaseObject.SQLIterableImpl;
+import Strategy.Connections.ConnectionStrategy;
 
 public class DataMapperSQL<T> implements DataMapper<T> {
 

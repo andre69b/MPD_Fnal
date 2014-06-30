@@ -1,16 +1,18 @@
 package Strategy.Mappers;
 
+import java.lang.reflect.Member;
+import java.util.ArrayList;
 import java.util.List;
 
 import DataBaseObject.EDTable;
 import MapperBuilder.ColumnInfo;
-import MapperBuilder.ConnectionStrategy;
 import MapperBuilder.DataMapper;
 import MapperBuilder.DataMapperSQL;
 import MapperBuilder.MappingStrategy;
+import Strategy.Connections.ConnectionStrategy;
 
 public abstract class AbstractMapping implements MappingStrategy{
-	
+	ColumnInfo primaryKey;
 	@Override
 	public <T> DataMapper<T> build(Class<T> klass, ConnectionStrategy connStr) {
 		
@@ -18,12 +20,29 @@ public abstract class AbstractMapping implements MappingStrategy{
 		if(Table == null)
 			throw new UnsupportedOperationException("All ED must have an EDTableAttribute with its TableName!");
 		
-		String tableName = Table.TableName();
-		ColumnInfo primaryKey = null;
-		List<ColumnInfo> nameColumns = getColumnInfoAndFillPrimaryKey(klass,primaryKey);
-		
-		return new DataMapperSQL<T>(tableName, connStr, klass, nameColumns, primaryKey);
-	}
-	protected abstract <T> List<ColumnInfo> getColumnInfoAndFillPrimaryKey(Class<T> klass,ColumnInfo primaryKey);
+		primaryKey = null;
+		List<ColumnInfo> nameColumns = getColumnInfoAndFillPrimaryKey(klass);
 
+		return new DataMapperSQL<T>(Table.TableName(), connStr, klass, nameColumns, primaryKey);
+	}
+	
+	protected abstract <T> Member[] getMembers(Class<T> klass);
+	protected abstract ColumnInfo getColumnInfo(Member member);
+	protected abstract boolean checkPrimaryKeyAnnotation(Member member);
+	
+	protected <T> List<ColumnInfo> getColumnInfoAndFillPrimaryKey(Class<T> klass) {
+		Member[] members = getMembers(klass);
+		List<ColumnInfo> ret = new ArrayList<>(members.length);
+		ColumnInfo ci;
+		for (Member member : members) {
+			ci = getColumnInfo(member);
+			if(ci==null)
+				continue;
+			ret.add(ci);
+			if(primaryKey==null && checkPrimaryKeyAnnotation(member) ){
+				primaryKey=ci;
+			}
+		}
+		return ret;
+	}
 }

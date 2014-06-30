@@ -12,6 +12,16 @@ public class SingletonConnection extends AbstractConnection {
 
 	@Override
 	public Connection getConnection() {
-		return connection;
+		try {
+			if (connection != null) {
+				return connection;
+			} else {
+				throw new UnsupportedOperationException(
+						"Connection already closed.");
+			}
+		} catch (UnsupportedOperationException ex) {
+			throw new RuntimeException(ex);
+		}
 	}
 }
+
