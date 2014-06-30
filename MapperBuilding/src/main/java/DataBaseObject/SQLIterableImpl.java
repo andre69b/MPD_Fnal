@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import MapperBuilder.ColumnInfo;
-import MapperBuilder.ConnectionStrategy;
+import Strategy.Connections.ConnectionStrategy;
 
 public class SQLIterableImpl<T> implements SQLIterable<T> {
 
