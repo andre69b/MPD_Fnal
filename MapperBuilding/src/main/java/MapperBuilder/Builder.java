@@ -1,5 +1,7 @@
 package MapperBuilder;
 
+import Strategy.Connections.ConnectionStrategy;
+
 
 public class Builder {
 	

@@ -3,8 +3,6 @@ package Strategy.Connections;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import MapperBuilder.ConnectionStrategy;
-
 import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
 
 public abstract class AbstractConnection implements ConnectionStrategy {
@@ -51,4 +49,15 @@ public abstract class AbstractConnection implements ConnectionStrategy {
 		        throw new RuntimeException(ex);
 		}
 	}
+	@Override
+	public void close() {
+        if (connection != null) {
+        	try {
+        		connection.close();
+    		} catch (SQLException ex) {
+    		        throw new RuntimeException(ex);
+    		}
+        	connection = null;
+        }
+    }
 }

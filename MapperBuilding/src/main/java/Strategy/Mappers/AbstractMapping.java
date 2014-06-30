@@ -4,10 +4,10 @@ import java.util.List;
 
 import DataBaseObject.EDTable;
 import MapperBuilder.ColumnInfo;
-import MapperBuilder.ConnectionStrategy;
 import MapperBuilder.DataMapper;
 import MapperBuilder.DataMapperSQL;
 import MapperBuilder.MappingStrategy;
+import Strategy.Connections.ConnectionStrategy;
 
 public abstract class AbstractMapping implements MappingStrategy{
 	
