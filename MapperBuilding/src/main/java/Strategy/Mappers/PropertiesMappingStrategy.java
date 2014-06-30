@@ -1,36 +1,13 @@
 package Strategy.Mappers;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Member;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
 
 import DataBaseObject.PrimaryKey;
 import MapperBuilder.ColumnInfo;
 
-public class PropertiesMappingStrategy extends AbstractMapping {
-	
-	@Override
-	protected <T> List<ColumnInfo> getColumnInfoAndFillPrimaryKey(
-			Class<T> klass, ColumnInfo primaryKey) {
-		Method[] methods = klass.getMethods();
-		List<ColumnInfo> ret = new ArrayList<>(methods.length);
-		ColumnInfo ci;
-		for (Method method : methods) {
-			if(!method.getName().contains("Get"))
-				continue;
-			ret.add(new PropertiesColumnInfo(method));
-			ci=new PropertiesColumnInfo(method);
-			ret.add(ci);
-			if(primaryKey!=null){
-				PrimaryKey pka = method.getAnnotation(PrimaryKey.class);
-				if(pka!=null)
-					primaryKey=ci;
-			}
-		}
-		return ret;
-	}
-	
+public class PropertiesMappingStrategy extends AbstractMapping {	
 	
 	private class PropertiesColumnInfo implements ColumnInfo{
 		Method method;
@@ -56,6 +33,23 @@ public class PropertiesMappingStrategy extends AbstractMapping {
 			}
 			return ret;
 		}
-		
+	}
+
+	@Override
+	protected <T> Member[] getMembers(Class<T> klass) {
+		return klass.getMethods();
+	}
+
+	@Override
+	protected ColumnInfo getColumnInfo(Member member) {
+		if(member.getName().contains("Get"))
+			return new PropertiesColumnInfo((Method) member);
+		else return null;
+	}
+
+	@Override
+	protected boolean checkPrimaryKeyAnnotation(Member member) {
+		PrimaryKey pka = ((Method)member).getAnnotation(PrimaryKey.class);
+		return pka!=null;
 	}
 }
