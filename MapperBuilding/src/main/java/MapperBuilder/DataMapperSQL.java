@@ -17,25 +17,27 @@ public class DataMapperSQL<T> implements DataMapper<T> {
 	private Class<T> klass;
 	private List<ColumnInfo> columnsInfo;
 	private ColumnInfo primaryKey;
+	private Constructor<T> constr;
 
 	public DataMapperSQL(String nameTable, ConnectionStrategy conn,
-			Class<T> klass, List<ColumnInfo> nameColumns, ColumnInfo primaryKey) {
+			Class<T> klass, List<ColumnInfo> nameColumns, ColumnInfo primaryKey,Constructor<T> constr) {
 		this.nameTable = nameTable;
 		this.connStr = conn;
 		this.klass = klass;
 		this.columnsInfo = nameColumns;
 		this.primaryKey = primaryKey;
+		this.constr=constr;
 	}
 
 	@Override
 	public SQLIterableImpl<T> getAll() {
-		Stream<Constructor<?>> lambda = Arrays.stream(klass.getConstructors())
-				.filter(x -> x.getParameterCount() > 0);
-
-		if (lambda.count() > 1)
-			throw new RuntimeException();
-
-		Constructor<T> constr = (Constructor<T>) lambda.findFirst().get();
+//		Stream<Constructor<?>> lambda = Arrays.stream(klass.getConstructors())
+//				.filter(x -> x.getParameterCount() > 0);
+//
+//		if (lambda.count() > 1)
+//			throw new RuntimeException();
+//
+//		Constructor<T> constr = (Constructor<T>) lambda.findFirst().get();
 		return new SQLIterableImpl<T>("SELECT * FROM " + nameTable, connStr,
 				constr, columnsInfo);
 	}
