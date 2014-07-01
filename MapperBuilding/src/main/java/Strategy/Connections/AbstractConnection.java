@@ -32,24 +32,6 @@ public abstract class AbstractConnection implements ConnectionStrategy {
 		}
 	}
 	@Override
-	public void rollback() {
-		try {
-			connection.rollback();
-		} catch (SQLException ex) {
-		        throw new RuntimeException(ex);
-		}
-		
-	}
-
-	@Override
-	public void commit() {
-		try {
-			connection.commit();
-		} catch (SQLException ex) {
-		        throw new RuntimeException(ex);
-		}
-	}
-	@Override
 	public void close() {
         if (connection != null) {
         	try {
