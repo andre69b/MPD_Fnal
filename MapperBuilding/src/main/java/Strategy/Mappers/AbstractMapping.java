@@ -1,8 +1,11 @@
 package Strategy.Mappers;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Member;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 import DataBaseObject.EDTable;
 import MapperBuilder.ColumnInfo;
@@ -23,6 +26,15 @@ public abstract class AbstractMapping implements MappingStrategy{
 		primaryKey = null;
 		List<ColumnInfo> nameColumns = getColumnInfoAndFillPrimaryKey(klass);
 
+		Stream<Constructor<?>> lambda = Arrays.stream(klass.getConstructors())
+				.filter(x -> x.getParameterCount() == nameColumns.size());
+
+		if (lambda.count() > 1)
+			throw new RuntimeException();
+
+		Constructor<T> constr = (Constructor<T>) lambda.findFirst().get();
+		
+		
 		return new DataMapperSQL<T>(Table.TableName(), connStr, klass, nameColumns, primaryKey);
 	}
 	
