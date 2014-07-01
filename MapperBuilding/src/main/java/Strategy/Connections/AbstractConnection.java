@@ -24,11 +24,16 @@ public abstract class AbstractConnection implements ConnectionStrategy {
 		ds.setDatabaseName(DATABASENAME);
 	}
 	@Override
-	public void autoCommit(boolean autocommit) {
+	public Connection getConnection() {
 		try {
-	        	connection.setAutoCommit(autocommit);
-		} catch (SQLException ex) {
-		        throw new RuntimeException(ex);
+			if (connection != null) {
+				return connection;
+			} else {
+				throw new UnsupportedOperationException(
+						"Connection already closed.");
+			}
+		} catch (UnsupportedOperationException ex) {
+			throw new RuntimeException(ex);
 		}
 	}
 	@Override
