@@ -24,6 +24,19 @@ public abstract class AbstractConnection implements ConnectionStrategy {
 		ds.setDatabaseName(DATABASENAME);
 	}
 	@Override
+	public Connection getConnection() {
+		try {
+			if (connection != null) {
+				return connection;
+			} else {
+				throw new UnsupportedOperationException(
+						"Connection already closed.");
+			}
+		} catch (UnsupportedOperationException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+	@Override
 	public void close() {
         if (connection != null) {
         	try {
