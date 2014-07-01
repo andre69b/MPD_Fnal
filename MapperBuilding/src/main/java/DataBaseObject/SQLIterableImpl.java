@@ -35,9 +35,10 @@ public class SQLIterableImpl<T> implements SQLIterable<T> {
 	@Override
 	public SQLIterable<T> where(String clause) {
 		if (firstWhereDone)
-			sqlStatement.append(" WHERE ");
-		else
 			sqlStatement.append(" AND ");
+		else
+			sqlStatement.append(" WHERE ");
+			
 		sqlStatement.append(clause);
 		return this;
 	}
@@ -49,12 +50,12 @@ public class SQLIterableImpl<T> implements SQLIterable<T> {
 		try {
 			connStr.beginTransaction(true);
 			String statementWithCount = sqlStatement.toString().replace("*",
-					"COUNT(*)");
+					"COUNT(*) as count");
 			cmd = connStr.getConnection().prepareStatement(statementWithCount);
 			fillArgsToBind(cmd);
 			ResultSet rs = cmd.executeQuery();
 			if (rs.next())
-				returnElements = rs.getInt(0);
+				returnElements = rs.getInt("count");
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -127,7 +128,7 @@ public class SQLIterableImpl<T> implements SQLIterable<T> {
 	}
 
 	private void fillArgsToBind(PreparedStatement prepareS) {
-		if (argsToBind != null || argsToBind.length > 0) {
+		if (argsToBind != null && argsToBind.length > 0) {
 			for (int i = 0; i < argsToBind.length; ++i) {
 				try {
 					prepareS.setObject(i+1, argsToBind[i]);

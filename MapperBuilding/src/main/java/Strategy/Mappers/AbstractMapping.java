@@ -32,7 +32,7 @@ public abstract class AbstractMapping implements MappingStrategy{
 			/*Constructor<?>[] i = klass.getConstructors();
 			Class<?>[] j= i[0].getParameterTypes();*/
 			constr = (Constructor<T>) Arrays.stream(klass.getConstructors())
-					.filter(x -> x.getParameterCount() == nameColumns.size()+1)
+					.filter(x -> x.getParameterCount() == nameColumns.size())
 					.findFirst()
 					.get();
 		} catch (NoSuchElementException e) {
