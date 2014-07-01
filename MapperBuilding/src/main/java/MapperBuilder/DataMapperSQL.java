@@ -31,13 +31,6 @@ public class DataMapperSQL<T> implements DataMapper<T> {
 
 	@Override
 	public SQLIterableImpl<T> getAll() {
-//		Stream<Constructor<?>> lambda = Arrays.stream(klass.getConstructors())
-//				.filter(x -> x.getParameterCount() > 0);
-//
-//		if (lambda.count() > 1)
-//			throw new RuntimeException();
-//
-//		Constructor<T> constr = (Constructor<T>) lambda.findFirst().get();
 		return new SQLIterableImpl<T>("SELECT * FROM " + nameTable, connStr,
 				constr, columnsInfo);
 	}

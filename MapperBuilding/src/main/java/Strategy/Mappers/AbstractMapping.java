@@ -5,7 +5,7 @@ import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
+import java.util.NoSuchElementException;
 
 import DataBaseObject.EDTable;
 import MapperBuilder.ColumnInfo;
@@ -26,16 +26,20 @@ public abstract class AbstractMapping implements MappingStrategy{
 		primaryKey = null;
 		List<ColumnInfo> nameColumns = getColumnInfoAndFillPrimaryKey(klass);
 
-		Stream<Constructor<?>> lambda = Arrays.stream(klass.getConstructors())
-				.filter(x -> x.getParameterCount() == nameColumns.size());
-
-		if (lambda.count() > 1)
-			throw new RuntimeException();
-
-		Constructor<T> constr = (Constructor<T>) lambda.findFirst().get();
+		Constructor<T> constr = null;
 		
+		try {
+			/*Constructor<?>[] i = klass.getConstructors();
+			Class<?>[] j= i[0].getParameterTypes();*/
+			constr = (Constructor<T>) Arrays.stream(klass.getConstructors())
+					.filter(x -> x.getParameterCount() == nameColumns.size()+1)
+					.findFirst()
+					.get();
+		} catch (NoSuchElementException e) {
+			throw new UnsupportedOperationException("All ED must have a Constructor with all parameters!");
+		}	
 		
-		return new DataMapperSQL<T>(Table.TableName(), connStr, klass, nameColumns, primaryKey);
+		return new DataMapperSQL<T>(Table.TableName(), connStr, klass, nameColumns, primaryKey,constr);
 	}
 	
 	protected abstract <T> Member[] getMembers(Class<T> klass);
