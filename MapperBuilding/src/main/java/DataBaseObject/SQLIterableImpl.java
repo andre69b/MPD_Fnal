@@ -22,6 +22,7 @@ public class SQLIterableImpl<T> implements SQLIterable<T> {
 	private PreparedStatement cmd;
 	private boolean iteratorIsValid;
 	private Object[] argsToBind;
+	private int returnCount;
 
 	public SQLIterableImpl(String sqlStatement, ConnectionStrategy connStr,
 			Constructor<T> constr, List<ColumnInfo> columnsInfo) {
@@ -44,8 +45,9 @@ public class SQLIterableImpl<T> implements SQLIterable<T> {
 
 	@Override
 	public int count() {
+		if(!iteratorIsValid)
+			return returnCount;
 		iteratorIsValid = false;
-		int returnElements = -1;
 		try {
 			String statementWithCount = sqlStatement.toString().replace("*",
 					"COUNT(*)");
@@ -53,11 +55,11 @@ public class SQLIterableImpl<T> implements SQLIterable<T> {
 			fillArgsToBind(cmd);
 			ResultSet rs = cmd.executeQuery();
 			if (rs.next())
-				returnElements = rs.getInt(0);
+				returnCount = rs.getInt(0);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-		return returnElements;
+		return returnCount;
 	}
 
 	@Override
