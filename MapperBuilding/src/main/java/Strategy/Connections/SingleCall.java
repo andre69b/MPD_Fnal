@@ -2,10 +2,8 @@ package Strategy.Connections;
 
 import java.sql.SQLException;
 
-import com.microsoft.sqlserver.jdbc.SQLServerException;
-
 public class SingleCall extends AbstractConnection {
-	public SingleCall() throws SQLServerException {
+	public SingleCall() {
 		super();
 	}
 

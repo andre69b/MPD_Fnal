@@ -2,12 +2,14 @@ package Strategy.Connections;
 
 import java.sql.SQLException;
 
-import com.microsoft.sqlserver.jdbc.SQLServerException;
-
 public class SingletonConnection extends AbstractConnection {
-	public SingletonConnection() throws SQLServerException {
+	public SingletonConnection() {
 		super();
-		connection = ds.getConnection();
+		try {
+			connection = ds.getConnection();
+		} catch (SQLException ex) {
+		        throw new RuntimeException(ex);
+		}
 	}
 	@Override
 	public void rollback() {
