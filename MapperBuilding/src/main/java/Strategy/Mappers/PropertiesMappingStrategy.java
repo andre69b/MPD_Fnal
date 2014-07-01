@@ -41,7 +41,7 @@ public class PropertiesMappingStrategy extends AbstractMapping {
 	}
 
 	@Override
-	protected ColumnInfo getColumnInfo(Member member) {
+	protected ColumnInfo createColumnInfo(Member member) {
 		if(member.getName().contains("Get"))
 			return new PropertiesColumnInfo((Method) member);
 		else return null;

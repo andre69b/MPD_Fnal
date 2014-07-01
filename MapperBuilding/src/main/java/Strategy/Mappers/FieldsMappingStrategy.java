@@ -37,7 +37,7 @@ public class FieldsMappingStrategy extends AbstractMapping {
 	}
 
 	@Override
-	protected ColumnInfo getColumnInfo(Member member) {
+	protected ColumnInfo createColumnInfo(Member member) {
 		return new FieldsColumnInfo((Field)member);
 	}
 

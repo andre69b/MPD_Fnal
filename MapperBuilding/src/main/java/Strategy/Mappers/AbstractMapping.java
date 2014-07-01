@@ -27,7 +27,7 @@ public abstract class AbstractMapping implements MappingStrategy{
 	}
 	
 	protected abstract <T> Member[] getMembers(Class<T> klass);
-	protected abstract ColumnInfo getColumnInfo(Member member);
+	protected abstract ColumnInfo createColumnInfo(Member member);
 	protected abstract boolean checkPrimaryKeyAnnotation(Member member);
 	
 	protected <T> List<ColumnInfo> getColumnInfoAndFillPrimaryKey(Class<T> klass) {
@@ -35,7 +35,7 @@ public abstract class AbstractMapping implements MappingStrategy{
 		List<ColumnInfo> ret = new ArrayList<>(members.length);
 		ColumnInfo ci;
 		for (Member member : members) {
-			ci = getColumnInfo(member);
+			ci = createColumnInfo(member);
 			if(ci==null)
 				continue;
 			ret.add(ci);
