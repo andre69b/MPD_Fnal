@@ -43,6 +43,7 @@ public class DataMapperSQL<T> implements DataMapper<T> {
 	@Override
 	public void update(T val) {
 		try {
+			connStr.beginTransaction(false);
 			StringBuilder prepareStamentString = new StringBuilder(
 					"UPDATE ? SET ");
 			int indexAux = 0;
@@ -67,9 +68,9 @@ public class DataMapperSQL<T> implements DataMapper<T> {
 	@Override
 	public void delete(T val) {
 		try {
+			connStr.beginTransaction(false);
 			PreparedStatement cmd = connStr.getConnection().prepareStatement(
 					"DELETE FROM ? WHERE ?=?");
-			
 			fillPrepareStament(cmd,nameTable,primaryKey.getName(), primaryKey.get(val));
 
 			cmd.executeUpdate();
@@ -83,6 +84,7 @@ public class DataMapperSQL<T> implements DataMapper<T> {
 	@Override
 	public void insert(T val) {
 		try {
+			connStr.beginTransaction(false);
 			StringBuilder prepareStamentString = new StringBuilder(
 					"INSERT INTO ? VALUES(");
 			int indexAux = 0;
@@ -96,7 +98,7 @@ public class DataMapperSQL<T> implements DataMapper<T> {
 
 			cmd = connStr.getConnection().prepareStatement(
 					prepareStamentString.toString());
-
+			
 			fillPrepareStament(cmd,nameTable);
 
 			cmd.executeUpdate();

@@ -49,6 +49,7 @@ public class SQLIterableImpl<T> implements SQLIterable<T> {
 			return returnCount;
 		iteratorIsValid = false;
 		try {
+			connStr.beginTransaction(true);
 			String statementWithCount = sqlStatement.toString().replace("*",
 					"COUNT(*)");
 			cmd = connStr.getConnection().prepareStatement(statementWithCount);
@@ -87,6 +88,7 @@ public class SQLIterableImpl<T> implements SQLIterable<T> {
 			public boolean hasNext() {
 				try {
 					if (rs == null) {
+						connStr.beginTransaction(true);
 						cmd = connStr.getConnection().prepareStatement(
 								sqlStatement.toString());
 						fillArgsToBind(cmd);
