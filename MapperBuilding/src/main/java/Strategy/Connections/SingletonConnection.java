@@ -1,6 +1,7 @@
 package Strategy.Connections;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 
@@ -21,6 +22,24 @@ public class SingletonConnection extends AbstractConnection {
 			}
 		} catch (UnsupportedOperationException ex) {
 			throw new RuntimeException(ex);
+		}
+	}
+	@Override
+	public void rollback() {
+		try {
+			connection.rollback();
+		} catch (SQLException ex) {
+		        throw new RuntimeException(ex);
+		}
+		
+	}
+
+	@Override
+	public void commit() {
+		try {
+			connection.commit();
+		} catch (SQLException ex) {
+		        throw new RuntimeException(ex);
 		}
 	}
 }
