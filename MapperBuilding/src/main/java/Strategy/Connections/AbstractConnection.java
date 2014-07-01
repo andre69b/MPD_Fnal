@@ -24,14 +24,6 @@ public abstract class AbstractConnection implements ConnectionStrategy {
 		ds.setDatabaseName(DATABASENAME);
 	}
 	@Override
-	public void autoCommit(boolean autocommit) {
-		try {
-	        	connection.setAutoCommit(autocommit);
-		} catch (SQLException ex) {
-		        throw new RuntimeException(ex);
-		}
-	}
-	@Override
 	public void close() {
         if (connection != null) {
         	try {
