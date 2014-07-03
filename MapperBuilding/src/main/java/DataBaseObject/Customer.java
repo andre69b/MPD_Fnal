@@ -2,124 +2,135 @@ package DataBaseObject;
 
 @EDTable(TableName = "Customers")
 public class Customer {
-	
-	@PrimaryKey
-	public String customerID;
-	public String companyName;
-	public String contactName;
-	public String contactTitle;
-	public String address;
-	public String city;
-	public String region;
-	public String postalCode;
-	public String country;
-	public String phone;
-	public String fax;
-	
 
-	
+	@PrimaryKey
+	public String CustomerID;
+	public String CompanyName;
+	public String ContactName;
+	public String ContactTitle;
+	public String Address;
+	public String City;
+	public String Region;
+	public String PostalCode;
+	public String Country;
+	public String Phone;
+	public String Fax;
+
+	@ForeignKey(Type = Order.class, Association = Association.Multiple)
+	public Iterable<Order> Orders;
+
 	public Customer(String customerID, String companyName, String contactName,
 			String contactTitle, String address, String city, String region,
-			String postalCode, String country, String phone, String fax) {
+			String postalCode, String country, String phone, String fax,
+			Iterable<Order> orders) {
 
-		this.customerID = customerID;
-		this.companyName = companyName;
-		this.contactName = contactName;
-		this.contactTitle = contactTitle;
-		this.address = address;
-		this.city = city;
-		this.region = region;
-		this.postalCode = postalCode;
-		this.country = country;
-		this.phone = phone;
-		this.fax = fax;
+		this.CustomerID = customerID;
+		this.CompanyName = companyName;
+		this.ContactName = contactName;
+		this.ContactTitle = contactTitle;
+		this.Address = address;
+		this.City = city;
+		this.Region = region;
+		this.PostalCode = postalCode;
+		this.Country = country;
+		this.Phone = phone;
+		this.Fax = fax;
+		this.Orders = orders;
 	}
 
+	public Iterable<Order> getOrders() {
+		return Orders;
+	}
+
+	public void setOrders(Iterable<Order> orders) {
+		this.Orders = orders;
+	}
+	
 	public String getCustomerID() {
-		return customerID;
+		return CustomerID;
 	}
 
 	public void setCustomerID(String customerID) {
-		this.customerID = customerID;
+		this.CustomerID = customerID;
 	}
 
 	public String getCompanyName() {
-		return companyName;
+		return CompanyName;
 	}
 
 	public void setCompanyName(String companyName) {
-		this.companyName = companyName;
+		this.CompanyName = companyName;
 	}
 
 	public String getContactName() {
-		return contactName;
+		return ContactName;
 	}
 
 	public void setContactName(String contactName) {
-		this.contactName = contactName;
+		this.ContactName = contactName;
 	}
 
 	public String getContactTitle() {
-		return contactTitle;
+		return ContactTitle;
 	}
 
 	public void setContactTitle(String contactTitle) {
-		this.contactTitle = contactTitle;
+		this.ContactTitle = contactTitle;
 	}
 
 	public String getAddress() {
-		return address;
+		return Address;
 	}
 
 	public void setAddress(String address) {
-		this.address = address;
+		this.Address = address;
 	}
 
 	public String getCity() {
-		return city;
+		return City;
 	}
 
 	public void setCity(String city) {
-		this.city = city;
+		this.City = city;
 	}
 
 	public String getRegion() {
-		return region;
+		return Region;
 	}
 
 	public void setRegion(String region) {
-		this.region = region;
+		this.Region = region;
 	}
 
 	public String getPostalCode() {
-		return postalCode;
+		return PostalCode;
 	}
 
 	public void setPostalCode(String postalCode) {
-		this.postalCode = postalCode;
+		this.PostalCode = postalCode;
 	}
 
 	public String getCountry() {
-		return country;
+		return Country;
 	}
 
 	public void setCountry(String country) {
-		this.country = country;
+		this.Country = country;
 	}
 
 	public String getPhone() {
-		return phone;
+		return Phone;
 	}
 
 	public void setPhone(String phone) {
-		this.phone = phone;
+		this.Phone = phone;
 	}
 
 	public String getFax() {
-		return fax;
+		return Fax;
 	}
-	
+
 	public void setFax(String fax) {
-		this.fax = fax;
+		this.Fax = fax;
 	}
 }
