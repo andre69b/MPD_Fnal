@@ -31,6 +31,17 @@ public class SQLIterableImpl<T> implements SQLIterable<T> {
 		this.columnInfos = columnsInfo;
 		iteratorIsValid = true;
 	}
+	
+	private SQLIterableImpl(String sqlStatement, ConnectionStrategy connStr,
+			Constructor<T> constr, List<ColumnInfo> columnsInfo,Object[] argsToBind,boolean interValid) {
+		this.sqlStatement = new StringBuilder(sqlStatement);
+		this.connStr = connStr;
+		this.constr = constr;
+		this.columnInfos = columnsInfo;
+		iteratorIsValid = interValid;
+		this.argsToBind = argsToBind;
+		
+	}
 
 	@Override
 	public SQLIterable<T> where(String clause) {
@@ -40,7 +51,7 @@ public class SQLIterableImpl<T> implements SQLIterable<T> {
 			sqlStatement.append(" WHERE ");
 			
 		sqlStatement.append(clause);
-		return this;
+		return new SQLIterableImpl<T>(sqlStatement.toString(), connStr, constr, columnInfos,argsToBind,iteratorIsValid);
 	}
 
 	@Override
@@ -65,7 +76,7 @@ public class SQLIterableImpl<T> implements SQLIterable<T> {
 	@Override
 	public SQLIterable<T> bind(Object... args) {
 		argsToBind = args;
-		return this;
+		return new SQLIterableImpl<T>(sqlStatement.toString(), connStr, constr, columnInfos,argsToBind,iteratorIsValid);
 	}
 
 	@Override
@@ -77,22 +88,24 @@ public class SQLIterableImpl<T> implements SQLIterable<T> {
 	public Iterator<T> iterator() {
 		if (!iteratorIsValid)
 			throw new RuntimeException(new IllegalAccessException());
-
+		ResultSet rs;
+		try {
+			connStr.beginTransaction(true);
+			cmd = connStr.getConnection().prepareStatement(
+					sqlStatement.toString());
+			fillArgsToBind(cmd);
+			rs = cmd.executeQuery();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
 		return new Iterator<T>() {
 			T next;
 			boolean containsNext = false;
-			ResultSet rs;
+			
 
 			@Override
 			public boolean hasNext() {
 				try {
-					if (rs == null) {
-						connStr.beginTransaction(true);
-						cmd = connStr.getConnection().prepareStatement(
-								sqlStatement.toString());
-						fillArgsToBind(cmd);
-						rs = cmd.executeQuery();
-					}
 					if (containsNext)
 						return true;
 					if (rs.next()) {
