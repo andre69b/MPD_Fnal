@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -14,14 +15,13 @@ import Strategy.Connections.ConnectionStrategy;
 
 public class SQLIterableImpl<T> implements SQLIterable<T> {
 
-	private StringBuilder sqlStatement;
-	private ConnectionStrategy connStr;
-	private Constructor<T> constr;
-	private List<ColumnInfo> columnInfos;
-	private boolean firstWhereDone;
+	protected StringBuilder sqlStatement;
+	protected ConnectionStrategy connStr;
+	protected Constructor<T> constr;
+	protected List<ColumnInfo> columnInfos;
 	private PreparedStatement cmd;
 	private boolean iteratorIsValid;
-	private Object[] argsToBind;
+	protected List<Object> argsToBind;
 
 	public SQLIterableImpl(String sqlStatement, ConnectionStrategy connStr,
 			Constructor<T> constr, List<ColumnInfo> columnsInfo) {
@@ -30,28 +30,16 @@ public class SQLIterableImpl<T> implements SQLIterable<T> {
 		this.constr = constr;
 		this.columnInfos = columnsInfo;
 		iteratorIsValid = true;
-	}
-	
-	private SQLIterableImpl(String sqlStatement, ConnectionStrategy connStr,
-			Constructor<T> constr, List<ColumnInfo> columnsInfo,Object[] argsToBind,boolean interValid) {
-		this.sqlStatement = new StringBuilder(sqlStatement);
-		this.connStr = connStr;
-		this.constr = constr;
-		this.columnInfos = columnsInfo;
-		iteratorIsValid = interValid;
-		this.argsToBind = argsToBind;
-		
+		argsToBind = new ArrayList<Object>();
 	}
 
 	@Override
-	public SQLIterable<T> where(String clause) {
-		if (firstWhereDone)
-			sqlStatement.append(" AND ");
-		else
-			sqlStatement.append(" WHERE ");
-			
-		sqlStatement.append(clause);
-		return new SQLIterableImpl<T>(sqlStatement.toString(), connStr, constr, columnInfos,argsToBind,iteratorIsValid);
+	public SQLExtensionMethods<T> where(String clause) {
+		
+		StringBuilder str = new StringBuilder(sqlStatement.toString());
+		str.append(" WHERE ");
+		str.append(clause);
+		return new SQLIterableAfterImpl<T>(str.toString(), connStr, constr, columnInfos,argsToBind);
 	}
 
 	@Override
@@ -72,12 +60,15 @@ public class SQLIterableImpl<T> implements SQLIterable<T> {
 		}
 		return returnElements;
 	}
-
-	@Override
+	
+	/*@Override
 	public SQLIterable<T> bind(Object... args) {
-		argsToBind = args;
-		return new SQLIterableImpl<T>(sqlStatement.toString(), connStr, constr, columnInfos,argsToBind,iteratorIsValid);
-	}
+		List<Object> list = new ArrayList<Object>(argsToBind.size()+args.length);
+		list.addAll(argsToBind);
+		for(Object o:args)
+			list.add(o);
+		return new SQLIterableAfterImpl<T>(sqlStatement.toString(), connStr, constr, columnInfos,list);
+	}*/
 
 	@Override
 	public void close() throws Exception {
@@ -111,7 +102,7 @@ public class SQLIterableImpl<T> implements SQLIterable<T> {
 					if (rs.next()) {
 						int auxIndex = 0, columnsSize = columnInfos.size();
 						Object[] objs = new Object[columnsSize];
-						while (auxIndex < columnsSize) {
+						while (auxIndex < columnsSize-1) {
 							objs[auxIndex] = rs.getObject(columnInfos.get(
 									auxIndex).getName());
 							auxIndex++;
@@ -141,10 +132,10 @@ public class SQLIterableImpl<T> implements SQLIterable<T> {
 	}
 
 	private void fillArgsToBind(PreparedStatement prepareS) {
-		if (argsToBind != null && argsToBind.length > 0) {
-			for (int i = 0; i < argsToBind.length; ++i) {
+		if (argsToBind != null && argsToBind.size() > 0) {
+			for (int i = 0; i < argsToBind.size(); ++i) {
 				try {
-					prepareS.setObject(i+1, argsToBind[i]);
+					prepareS.setObject(i+1, argsToBind.get(i));
 				} catch (SQLException e) {
 					throw new RuntimeException(e);
 				}

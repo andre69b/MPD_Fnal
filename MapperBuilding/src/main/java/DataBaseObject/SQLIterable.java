@@ -1,7 +1,7 @@
 package DataBaseObject;
 
 public interface SQLIterable<T> extends Iterable<T>, AutoCloseable{
-	SQLIterable<T> where(String clause);
+	SQLExtensionMethods<T> where(String clause);
 	int count();
-	SQLIterable<T> bind(Object... args);
+//	SQLIterable<T> bind(Object... args);
 }
