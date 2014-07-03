@@ -103,7 +103,7 @@ public class DataMapperSQL<T> implements DataMapper<T> {
 	}
 	
 	private void fillPrepareStament(PreparedStatement prepareS,Object... argsToPrepareStament) {
-		if (argsToPrepareStament != null || argsToPrepareStament.length > 0) {
+		if (argsToPrepareStament != null && argsToPrepareStament.length > 0) {
 			for (int i = 0; i < argsToPrepareStament.length; ++i) {
 				try {
 					prepareS.setObject(i+1, argsToPrepareStament[i]);
