@@ -1,5 +1,6 @@
 package DataBaseObject;
 
+@EDTable(TableName = "Shippers")
 public class Shipper {
 	
 	@PrimaryKey

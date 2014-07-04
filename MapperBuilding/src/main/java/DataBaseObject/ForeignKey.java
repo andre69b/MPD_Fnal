@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.METHOD, ElementType.FIELD })
 public @interface ForeignKey {
-	public Class<?> Type();
+	public String Table();
 	public Association Association();
 	public String AttributeName();
 }
