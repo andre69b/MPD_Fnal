@@ -3,17 +3,16 @@ package Strategy.Mappers;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Member;
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
 
-import DataBaseObject.Association;
 import DataBaseObject.EDTable;
 import DataBaseObject.ForeignKey;
+import DataBaseObject.IterableLazyObjects;
 import DataBaseObject.PrimaryKey;
 import MapperBuilder.ColumnInfo;
 import MapperBuilder.DataMapper;
@@ -37,7 +36,7 @@ public abstract class AbstractMapping implements MappingStrategy{
 		primaryKey = null;
 		List<ColumnInfo> nameColumns = getColumnInfoAndFillPrimaryKey(klass);
 		
-		//modifiedColumnsInfoForeignKey();
+		setIterablesWithForeignKey(connStr,null,null);
 
 		Constructor<T> constr = (Constructor<T>)getConstrutor(klass, nameColumns.size());
 		
@@ -45,11 +44,11 @@ public abstract class AbstractMapping implements MappingStrategy{
 		return new DataMapperSQL<T>(Table.TableName(), connStr, klass, nameColumns, primaryKey,constr);
 	}
 	
-	/*private void modifiedColumnsInfoForeignKey() {
-		for(Coluim c : listForeignKey){
-			
-		}
-	}*/
+	private <T> void setIterablesWithForeignKey(ConnectionStrategy connStr,List<ColumnInfo> nameColumns,Constructor<T> constr) {
+		PreparedStatement pre = null;
+		
+		new IterableLazyObjects<T>(pre,connStr,constr,nameColumns);
+	}
 
 	protected abstract <T> Member[] getMembers(Class<T> klass);
 	protected abstract ColumnInfo createColumnInfo(Member member);
