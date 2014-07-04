@@ -79,6 +79,20 @@ public class SQLIterableImpl<T> implements SQLIterable<T> {
 	public Iterator<T> iterator() {
 		if (!iteratorIsValid)
 			throw new RuntimeException(new IllegalAccessException());
+		try {
+			cmd = connStr.getConnection().prepareStatement(
+					sqlStatement.toString());
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+		fillArgsToBind(cmd);
+		return new IterableLazyObjects<T>(cmd,connStr,constr,columnInfos).iterator();
+	}
+	
+	/*@Override
+	public Iterator<T> iterator() {
+		if (!iteratorIsValid)
+			throw new RuntimeException(new IllegalAccessException());
 		ResultSet rs;
 		try {
 			connStr.beginTransaction(true);
@@ -129,7 +143,7 @@ public class SQLIterableImpl<T> implements SQLIterable<T> {
 			}
 
 		};
-	}
+	}*/
 
 	private void fillArgsToBind(PreparedStatement prepareS) {
 		if (argsToBind != null && argsToBind.size() > 0) {

@@ -1,5 +1,6 @@
 package Strategy.Mappers;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 
@@ -25,6 +26,7 @@ public class FieldsMappingStrategy extends AbstractMapping {
 				ret = field.get(obj);
 			} catch (IllegalArgumentException | IllegalAccessException e) {
 				int todo;
+				//TODO
 				e.printStackTrace();
 			}
 			return ret;
@@ -42,8 +44,7 @@ public class FieldsMappingStrategy extends AbstractMapping {
 	}
 
 	@Override
-	protected boolean checkPrimaryKeyAnnotation(Member member) {
-		PrimaryKey pka = ((Field)member).getAnnotation(PrimaryKey.class);
-		return pka!=null;
+	protected Annotation[] getMemberAnnotations(Member member) {
+		return ((Field)member).getDeclaredAnnotations();
 	}
 }

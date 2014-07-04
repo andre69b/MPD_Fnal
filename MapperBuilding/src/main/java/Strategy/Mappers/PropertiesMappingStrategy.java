@@ -1,5 +1,6 @@
 package Strategy.Mappers;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
@@ -53,8 +54,7 @@ public class PropertiesMappingStrategy extends AbstractMapping {
 	}
 
 	@Override
-	protected boolean checkPrimaryKeyAnnotation(Member member) {
-		PrimaryKey pka = ((Method)member).getAnnotation(PrimaryKey.class);
-		return pka!=null;
+	protected Annotation[] getMemberAnnotations(Member member) {
+		return ((Method)member).getDeclaredAnnotations();
 	}
 }
