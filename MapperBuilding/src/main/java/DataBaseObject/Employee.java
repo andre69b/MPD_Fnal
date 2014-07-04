@@ -25,7 +25,7 @@ public class Employee {
 	public int ReportsTo;
 	public String PhotoPath;
 	
-	@ForeignKey(Table = "Employees", Association = Association.Single, AttributeName="ReportsTo")
+	@ForeignKey(Type = Employee.class, Association = Association.Single, AttributeName="ReportsTo")
 	public Employee Report;
 	
 	public Employee(int employeeID, String lastName, String firstName,
@@ -55,7 +55,7 @@ public class Employee {
 		PhotoPath = photoPath;
 	}
 	
-	@ForeignKey(Table = "Employees", Association = Association.Single, AttributeName="ReportsTo")
+	@ForeignKey(Type = Employee.class, Association = Association.Single, AttributeName="ReportsTo")
 	public Employee getReport() {
 		return Report;
 	}

@@ -21,13 +21,13 @@ public class Order {
 	public String ShipPostalCode;
 	public String ShipCountry;
 
-	@ForeignKey(Table = "Customers", Association = Association.Single,AttributeName="CustomerID")
+	@ForeignKey(Type = Customer.class, Association = Association.Single,AttributeName="CustomerID")
 	public Customer Customer;
 
-	@ForeignKey(Table = "Employees", Association = Association.Single,AttributeName="EmployeeID")
+	@ForeignKey(Type = Employee.class, Association = Association.Single,AttributeName="EmployeeID")
 	public Employee Employee;
 
-	@ForeignKey(Table = "Shippers", Association = Association.Single,AttributeName="ShipVia")
+	@ForeignKey(Type = Shipper.class, Association = Association.Single,AttributeName="ShipVia")
 	public Shipper Shipper;
 
 	public Order(int orderID, String customerID, int employeeID,
@@ -52,7 +52,7 @@ public class Order {
 		ShipCountry = shipCountry;
 	}
 
-	@ForeignKey(Table = "Customers", Association = Association.Single,AttributeName="CustomerID")
+	@ForeignKey(Type = Customer.class, Association = Association.Single,AttributeName="CustomerID")
 	public Customer getCustomer() {
 		return Customer;
 	}
@@ -61,7 +61,7 @@ public class Order {
 		Customer = customer;
 	}
 
-	@ForeignKey(Table = "Employees", Association = Association.Single,AttributeName="EmployeeID")
+	@ForeignKey(Type = Employee.class, Association = Association.Single,AttributeName="EmployeeID")
 	public Employee getEmployee() {
 		return Employee;
 	}
@@ -70,7 +70,7 @@ public class Order {
 		Employee = employee;
 	}
 	
-	@ForeignKey(Table = "Shippers", Association = Association.Single,AttributeName="ShipVia")
+	@ForeignKey(Type = Shipper.class, Association = Association.Single,AttributeName="ShipVia")
 	public Shipper getShipper() {
 		return Shipper;
 	}

@@ -16,7 +16,7 @@ public class Customer {
 	public String Phone;
 	public String Fax;
 
-	@ForeignKey(Table = "Orders", Association = Association.Multiple,AttributeName="CustomerID")
+	@ForeignKey(Type = Order.class, Association = Association.Multiple,AttributeName="CustomerID")
 	public Iterable<Order> Orders;
 
 	public Customer(String customerID, String companyName, String contactName,
@@ -36,7 +36,7 @@ public class Customer {
 		this.Fax = fax;
 	}
 	
-	@ForeignKey(Table = "Orders", Association = Association.Multiple,AttributeName="CustomerID")
+	@ForeignKey(Type = Order.class, Association = Association.Multiple,AttributeName="CustomerID")
 	public Iterable<Order> getOrders() {
 		return Orders;
 	}
