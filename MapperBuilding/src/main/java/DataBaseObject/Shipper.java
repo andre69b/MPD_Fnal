@@ -12,7 +12,8 @@ public class Shipper {
 		CompanyName = companyName;
 		Phone = phone;
 	}
-
+	
+	@PrimaryKey
 	public int getShipperID() {
 		return ShipperID;
 	}

@@ -16,7 +16,8 @@ public class PropertiesMappingStrategy extends AbstractMapping {
 		String name;
 		public PropertiesColumnInfo (Method method){
 			this.method=method;
-			this.name=method.getName().replace(GET, "");
+			String name = method.getName();
+			this.name=name.substring(3,name.length() );
 		}
 		@Override
 		public String getName() {
@@ -44,7 +45,8 @@ public class PropertiesMappingStrategy extends AbstractMapping {
 
 	@Override
 	protected ColumnInfo createColumnInfo(Member member) {
-		if(member.getName().contains(GET)){
+		String get = member.getName().substring(0, 3);
+		if(get.equals(GET)){
 			Method toTest = (Method) member;
 			if(toTest.getParameterTypes().length==0)
 				return new PropertiesColumnInfo(toTest);

@@ -12,7 +12,7 @@ public class OrderProxy extends Order{
 			DataBaseObject.Employee employee, DataBaseObject.Shipper shipper) {
 		super(orderID, customerID, employeeID, orderDate, requiredDate, shippedDate,
 				shipVia, freight, shipName, shipAddress, shipCity, shipRegion,
-				shipPostalCode, shipCountry, customer, employee, shipper);
+				shipPostalCode, shipCountry);
 	}
 	
 	@Override

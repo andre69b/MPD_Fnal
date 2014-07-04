@@ -21,21 +21,20 @@ public class Order {
 	public String ShipPostalCode;
 	public String ShipCountry;
 
-	@ForeignKey(Type = Customer.class, Association = Association.Single)
+	@ForeignKey(Type = Customer.class, Association = Association.Single,AttributeName="CustomerID")
 	public Customer Customer;
 
-	@ForeignKey(Type = Employee.class, Association = Association.Single)
+	@ForeignKey(Type = Employee.class, Association = Association.Single,AttributeName="EmployeeID")
 	public Employee Employee;
 
-	@ForeignKey(Type = Shipper.class, Association = Association.Single)
+	@ForeignKey(Type = Shipper.class, Association = Association.Single,AttributeName="ShipVia")
 	public Shipper Shipper;
 
 	public Order(int orderID, String customerID, int employeeID,
 			Date orderDate, Date requiredDate, Date shippedDate, int shipVia,
 			double freight, String shipName, String shipAddress,
 			String shipCity, String shipRegion, String shipPostalCode,
-			String shipCountry, Customer customer, Employee employee,
-			Shipper shipper) {
+			String shipCountry) {
 
 		OrderID = orderID;
 		CustomerID = customerID;
@@ -51,11 +50,9 @@ public class Order {
 		ShipRegion = shipRegion;
 		ShipPostalCode = shipPostalCode;
 		ShipCountry = shipCountry;
-		Customer = customer;
-		Employee = employee;
-		Shipper = shipper;
 	}
 
+	@ForeignKey(Type = Customer.class, Association = Association.Single,AttributeName="CustomerID")
 	public Customer getCustomer() {
 		return Customer;
 	}
@@ -64,6 +61,7 @@ public class Order {
 		Customer = customer;
 	}
 
+	@ForeignKey(Type = Employee.class, Association = Association.Single,AttributeName="EmployeeID")
 	public Employee getEmployee() {
 		return Employee;
 	}
@@ -71,7 +69,8 @@ public class Order {
 	public void setEmployee(Employee employee) {
 		Employee = employee;
 	}
-
+	
+	@ForeignKey(Type = Shipper.class, Association = Association.Single,AttributeName="ShipVia")
 	public Shipper getShipper() {
 		return Shipper;
 	}
@@ -79,7 +78,8 @@ public class Order {
 	public void setShipper(Shipper shipper) {
 		Shipper = shipper;
 	}
-
+	
+	@PrimaryKey
 	public int getOrderID() {
 		return OrderID;
 	}
