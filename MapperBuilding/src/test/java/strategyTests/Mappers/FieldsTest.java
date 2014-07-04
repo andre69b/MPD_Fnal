@@ -1,10 +1,9 @@
-package Strategy.Mappers;
+package strategyTests.Mappers;
 
 import static org.junit.Assert.assertEquals;
 
 import java.lang.reflect.Field;
 import java.sql.SQLException;
-import java.util.List;
 
 import org.junit.Test;
 
@@ -14,12 +13,14 @@ import MapperBuilder.Builder;
 import MapperBuilder.ColumnInfo;
 import MapperBuilder.DataMapper;
 import MapperBuilder.DataMapperSQL;
+import Strategy.Mappers.FieldsMappingStrategy;
 
-public class PropertiesTest  {
+public class FieldsTest  {
 	private static final String TableName="TestClasses";
 	@EDTable(TableName = TableName)
 	private class TestClass {
 		
+		@PrimaryKey
 		public String TestClassID;
 		public String what;
 		
@@ -27,34 +28,18 @@ public class PropertiesTest  {
 			this.TestClassID = TestClassID;
 			this.what = what;
 		}
-		
-		@PrimaryKey
-		public String getTestClassID(){
-			return TestClassID;
-		}
-		public String getWhat(){
-			return what;
-		}
-		public int getint(int i){
-			return i;
-		}
-		public int togetzero(){
-			return 0;
-		}
 	}
 	
 	@Test
-	public void PropertiesTestTestClass() throws SQLException{
+	public void FieldsTestTestClass() throws SQLException{
         
-		Builder b = new Builder(new PropertiesMappingStrategy(),null); 
+		Builder b = new Builder(new FieldsMappingStrategy(),null); 
 		DataMapper<TestClass> TestClassMapper = b.build(TestClass.class); 
 		String nameTable = (String) getValue(TestClassMapper, "nameTable");
 		ColumnInfo primaryKey = (ColumnInfo) getValue(TestClassMapper, "primaryKey");
-		List<ColumnInfo> columnsInfo = (List<ColumnInfo>) getValue(TestClassMapper, "columnsInfo");
 		
 		assertEquals("TestClassID",primaryKey.getName());   
         assertEquals(TableName,nameTable);        
-        assertEquals(2,columnsInfo.size()); 
 	}
 
 	private Object getValue(DataMapper<TestClass> TestClassMapper,String fieldname) {

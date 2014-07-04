@@ -29,8 +29,9 @@ public abstract class AbstractMapping implements MappingStrategy{
 		Constructor<T> constr = null;
 		
 		try {
-			/*Constructor<?>[] i = klass.getConstructors();
-			Class<?>[] j= i[0].getParameterTypes();*/
+			Constructor<?>[] i = klass.getConstructors();
+			Class<?>[] j= i[0].getParameterTypes();
+			int c = i[0].getParameterCount();
 			constr = (Constructor<T>) Arrays.stream(klass.getConstructors())
 					.filter(x -> x.getParameterCount() == nameColumns.size())
 					.findFirst()

@@ -1,4 +1,4 @@
-package Strategy.Connections;
+package strategyTests.Connections;
 
 import static org.junit.Assert.assertEquals;
 
@@ -9,11 +9,12 @@ import java.sql.SQLException;
 
 import org.junit.Test;
 
-public class SingleCallTest  {
-	
+import Strategy.Connections.SingletonConnection;
+
+public class SingletonConnectionTest {
 	@Test
-	public void SingleCall() throws SQLException{
-		SingleCall sc = new SingleCall();
+	public void SingletonConnection() throws SQLException{
+		SingletonConnection sc = new SingletonConnection();
 		Connection c =sc.getConnection();
 		
 		PreparedStatement cmd = c.prepareStatement(
@@ -28,6 +29,6 @@ public class SingleCallTest  {
         while(rs.next()) count++;
         
               
-        assertEquals(12,count);        
+        assertEquals(12,count);
 	}
 }

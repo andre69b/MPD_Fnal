@@ -1,47 +1,35 @@
-package Strategy.Mappers;
+package strategyTests.Mappers;
 
 import static org.junit.Assert.assertEquals;
 
 import java.lang.reflect.Field;
 import java.sql.SQLException;
+import java.util.List;
 
 import org.junit.Test;
 
-import DataBaseObject.EDTable;
-import DataBaseObject.PrimaryKey;
 import MapperBuilder.Builder;
 import MapperBuilder.ColumnInfo;
 import MapperBuilder.DataMapper;
 import MapperBuilder.DataMapperSQL;
+import Strategy.Mappers.PropertiesMappingStrategy;
 
-public class FieldsTest  {
-	private static final String TableName="TestClasses";
-	@EDTable(TableName = TableName)
-	private class TestClass {
-		
-		@PrimaryKey
-		public String TestClassID;
-		public String what;
-		
-		public TestClass(String TestClassID, String what) {
-			this.TestClassID = TestClassID;
-			this.what = what;
-		}
-	}
+public class PropertiesTest  {
 	
 	@Test
-	public void FieldsTestTestClass() throws SQLException{
+	public void PropertiesTestTestClass() throws SQLException{
         
-		Builder b = new Builder(new FieldsMappingStrategy(),null); 
-		DataMapper<TestClass> TestClassMapper = b.build(TestClass.class); 
+		Builder b = new Builder(new PropertiesMappingStrategy(),null); 
+		DataMapper<PropertiesTestClass> TestClassMapper = b.build(PropertiesTestClass.class); 
 		String nameTable = (String) getValue(TestClassMapper, "nameTable");
 		ColumnInfo primaryKey = (ColumnInfo) getValue(TestClassMapper, "primaryKey");
-		
+		List<ColumnInfo> columnsInfo = (List<ColumnInfo>) getValue(TestClassMapper, "columnsInfo");
 		assertEquals("TestClassID",primaryKey.getName());   
-        assertEquals(TableName,nameTable);        
+        assertEquals("TestClasses",nameTable);        
+        assertEquals(2,columnsInfo.size()); 
 	}
 
-	private Object getValue(DataMapper<TestClass> TestClassMapper,String fieldname) {
+	private Object getValue(DataMapper<PropertiesTestClass> TestClassMapper,String fieldname) {
 		Object ret=null;
 		try {
 			Field nameTablefield = DataMapperSQL.class.getDeclaredField(fieldname);
