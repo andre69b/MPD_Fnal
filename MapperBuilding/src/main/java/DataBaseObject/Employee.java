@@ -25,7 +25,7 @@ public class Employee {
 	public int ReportsTo;
 	public String PhotoPath;
 	
-	@ForeignKey(Type =Employee.class, Association = Association.Single)
+	@ForeignKey(Type =Employee.class, Association = Association.Single, AttributeName="ReportsTo")
 	public Employee Report;
 	
 	public Employee(int employeeID, String lastName, String firstName,
@@ -33,7 +33,7 @@ public class Employee {
 			Date hireDate, String address, String city, String region,
 			String postalCode, String country, String homePhone,
 			String extension, String photo, String notes, int reportsTo,
-			String photoPath, Employee report) {
+			String photoPath) {
 		
 		EmployeeID = employeeID;
 		LastName = lastName;
@@ -53,9 +53,9 @@ public class Employee {
 		Notes = notes;
 		ReportsTo = reportsTo;
 		PhotoPath = photoPath;
-		Report = report;
 	}
 	
+	@ForeignKey(Type =Employee.class, Association = Association.Single, AttributeName="ReportsTo")
 	public Employee getReport() {
 		return Report;
 	}
@@ -64,6 +64,7 @@ public class Employee {
 		Report = report;
 	}
 
+	@PrimaryKey
 	public int getEmployeeID() {
 		return EmployeeID;
 	}

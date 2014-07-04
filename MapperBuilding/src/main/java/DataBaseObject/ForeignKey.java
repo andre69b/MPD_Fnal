@@ -10,5 +10,6 @@ import java.lang.annotation.Target;
 public @interface ForeignKey {
 	public Class<?> Type();
 	public Association Association();
+	public String AttributeName();
 }
 

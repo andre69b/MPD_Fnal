@@ -16,13 +16,12 @@ public class Customer {
 	public String Phone;
 	public String Fax;
 
-	@ForeignKey(Type = Order.class, Association = Association.Multiple)
+	@ForeignKey(Type = Order.class, Association = Association.Multiple,AttributeName="CustomerID")
 	public Iterable<Order> Orders;
 
 	public Customer(String customerID, String companyName, String contactName,
 			String contactTitle, String address, String city, String region,
-			String postalCode, String country, String phone, String fax,
-			Iterable<Order> orders) {
+			String postalCode, String country, String phone, String fax) {
 
 		this.CustomerID = customerID;
 		this.CompanyName = companyName;
@@ -35,9 +34,9 @@ public class Customer {
 		this.Country = country;
 		this.Phone = phone;
 		this.Fax = fax;
-		this.Orders = orders;
 	}
-
+	
+	@ForeignKey(Type = Order.class, Association = Association.Multiple,AttributeName="CustomerID")
 	public Iterable<Order> getOrders() {
 		return Orders;
 	}
@@ -45,7 +44,7 @@ public class Customer {
 	public void setOrders(Iterable<Order> orders) {
 		this.Orders = orders;
 	}
-	
+	@PrimaryKey
 	public String getCustomerID() {
 		return CustomerID;
 	}
