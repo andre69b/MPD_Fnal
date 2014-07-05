@@ -91,6 +91,8 @@ public abstract class AbstractMapping implements MappingStrategy{
 				--currentLevel;
 			}
 		}
+		
+		
 		return ret;
 	}
 	/*private  Constructor<?> getConstrutor(Class<?> klass, int numberOfParameters){
