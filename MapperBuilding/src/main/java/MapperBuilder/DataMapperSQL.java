@@ -3,6 +3,7 @@ package MapperBuilder;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import DataBaseObject.SQLIterableImpl;
 import Exception.MyRuntimeException;
@@ -14,21 +15,23 @@ public class DataMapperSQL<T> implements DataMapper<T> {
 	private String nameTable;
 	private Class<T> klass;
 	private List<ColumnInfo> columnsInfo;
+	private Map<String,List<ColumnInfo>> mapColumns;
 	private ColumnInfo primaryKey;
 
 	public DataMapperSQL(String nameTable, ConnectionStrategy conn,
-			Class<T> klass, List<ColumnInfo> nameColumns, ColumnInfo primaryKey) {
+			Class<T> klass, Map<String,List<ColumnInfo>> mapColumns, ColumnInfo primaryKey) {
 		this.nameTable = nameTable;
 		this.connStr = conn;
 		this.klass = klass;
-		this.columnsInfo = nameColumns;
+		this.columnsInfo = mapColumns.get("ColumnInfo");
+		this.mapColumns = mapColumns;
 		this.primaryKey = primaryKey;
 	}
 
 	@Override
 	public SQLIterableImpl<T> getAll() {
 		return new SQLIterableImpl<T>("SELECT * FROM " + nameTable, connStr,
-				klass, columnsInfo);
+				klass, mapColumns);
 	}
 
 	@Override

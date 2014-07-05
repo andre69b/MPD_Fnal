@@ -2,6 +2,7 @@ package DataBaseObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import MapperBuilder.ColumnInfo;
 import Strategy.Connections.ConnectionStrategy;
@@ -11,7 +12,7 @@ public class SQLIterableAfterImpl<T> extends SQLIterableImpl<T> implements
 
 	public SQLIterableAfterImpl(String sqlStatement,
 			ConnectionStrategy connStr, Class<T> klass,
-			List<ColumnInfo> columnsInfo, List<Object> args) {
+			Map<String,List<ColumnInfo>> columnsInfo, List<Object> args) {
 		super(sqlStatement, connStr, klass, columnsInfo);
 		argsToBind = args;
 	}
@@ -22,7 +23,7 @@ public class SQLIterableAfterImpl<T> extends SQLIterableImpl<T> implements
 		str.append(" AND ");
 		str.append(clause);
 		return new SQLIterableAfterImpl<T>(str.toString(), connStr, klass,
-				columnInfos, argsToBind);
+				mapColumns, argsToBind);
 	}
 
 	@Override
@@ -33,6 +34,6 @@ public class SQLIterableAfterImpl<T> extends SQLIterableImpl<T> implements
 		for (Object o : args)
 			list.add(o);
 		return new SQLIterableAfterImpl<T>(sqlStatement.toString(), connStr,
-				klass, columnInfos, list);
+				klass, mapColumns, list);
 	}
 }

@@ -13,15 +13,15 @@ import Strategy.Connections.ConnectionStrategy;
 
 public class IterableLazyObjects<T> implements Iterable<T> {
 
-	private PreparedStatement cmd;
+	final private String sqlStatement;
 	private ConnectionStrategy connStr;
 	private List<ColumnInfo> columnsInfo;
 	private Class<T> klass;
 
-	public IterableLazyObjects(PreparedStatement cmd,
+	public IterableLazyObjects(final String sqlStatement,
 			ConnectionStrategy connStr, Class<T> klass,
 			List<ColumnInfo> columnsInfo) {
-		this.cmd = cmd;
+		this.sqlStatement = sqlStatement;
 		this.connStr = connStr;
 		this.klass = klass;
 		this.columnsInfo = columnsInfo;
@@ -32,6 +32,8 @@ public class IterableLazyObjects<T> implements Iterable<T> {
 		ResultSet rs;
 		try {
 			connStr.beginTransaction(true);
+			PreparedStatement cmd = connStr.getConnection().prepareStatement(
+					sqlStatement);
 			rs = cmd.executeQuery();
 		} catch (SQLException e) {
 			throw new MyRuntimeException(e);

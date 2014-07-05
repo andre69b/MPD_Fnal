@@ -4,11 +4,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
 
 import Exception.MyRuntimeException;
 import MapperBuilder.ColumnInfo;
+import MapperBuilder.ForeignkeyObject;
 import Strategy.Connections.ConnectionStrategy;
 
 public class SQLIterableImpl<T> implements SQLIterable<T> {
@@ -16,17 +20,17 @@ public class SQLIterableImpl<T> implements SQLIterable<T> {
 	protected StringBuilder sqlStatement;
 	protected ConnectionStrategy connStr;
 	protected Class<T> klass;
-	protected List<ColumnInfo> columnInfos;
+	protected Map<String,List<ColumnInfo>> mapColumns;
 	private PreparedStatement cmd;
 	private boolean iteratorIsValid;
 	protected List<Object> argsToBind;
 
 	public SQLIterableImpl(String sqlStatement, ConnectionStrategy connStr,
-			Class<T> klass, List<ColumnInfo> columnsInfo) {
+			Class<T> klass, Map<String,List<ColumnInfo>> columnsInfo) {
 		this.sqlStatement = new StringBuilder(sqlStatement);
 		this.connStr = connStr;
 		this.klass = klass;
-		this.columnInfos = columnsInfo;
+		this.mapColumns = columnsInfo;
 		iteratorIsValid = true;
 		argsToBind = new ArrayList<Object>();
 	}
@@ -38,7 +42,7 @@ public class SQLIterableImpl<T> implements SQLIterable<T> {
 		str.append(" WHERE ");
 		str.append(clause);
 		return new SQLIterableAfterImpl<T>(str.toString(), connStr, klass,
-				columnInfos, argsToBind);
+				mapColumns, argsToBind);
 	}
 
 	@Override
@@ -69,15 +73,76 @@ public class SQLIterableImpl<T> implements SQLIterable<T> {
 	public Iterator<T> iterator() {
 		if (!iteratorIsValid)
 			throw new MyRuntimeException(new IllegalAccessException());
-		try {
+		/*try {
 			cmd = connStr.getConnection().prepareStatement(
 					sqlStatement.toString());
 		} catch (SQLException e) {
 			throw new MyRuntimeException(e);
+		}*/
+		
+		/*return new IterableLazyObjects<T>(cmd.toString(), connStr, klass, mapColumns)
+				.iterator();*/
+		
+		ResultSet rs;
+		try {
+			connStr.beginTransaction(true);
+			PreparedStatement cmd = connStr.getConnection().prepareStatement(
+					sqlStatement.toString());
+			fillArgsToBind(cmd);
+			rs = cmd.executeQuery();
+		} catch (SQLException e) {
+			throw new MyRuntimeException(e);
 		}
-		fillArgsToBind(cmd);
-		return new IterableLazyObjects<T>(cmd, connStr, klass, columnInfos)
-				.iterator();
+		return new Iterator<T>() {
+			T next;
+			boolean containsNext = false;
+			List<ColumnInfo> columnsInfo = mapColumns.get("ColumnInfo");
+			List<ColumnInfo> foreignKeyObjects = mapColumns.get("ForeignKeyObject");
+			
+			@Override
+			public boolean hasNext() {
+				try {
+					if (containsNext)
+						return true;
+					if (rs.next()) {
+						next = klass.newInstance();
+						int auxIndex = 0;
+
+						for (ColumnInfo c : columnsInfo) {
+							c.set(next, rs.getObject(columnsInfo
+									.get(auxIndex++).getName()));
+						}
+						
+						for (ColumnInfo c : foreignKeyObjects) {
+							ForeignkeyObject fO = (ForeignkeyObject)c;
+							c.set(next,
+								  columnsInfo.stream()
+									  .filter(x->x.getName().equals(fO.attributeName))
+									  .findFirst()
+									  .get()
+									  .get(next));
+						}
+
+						containsNext = true;
+						return true;
+					}
+					return false;
+				} catch (IllegalArgumentException | IllegalAccessException
+						| SQLException | InstantiationException e) {
+					throw new MyRuntimeException(e);
+				}
+			}
+
+			@Override
+			public T next() {
+				if (containsNext || hasNext()) {
+					containsNext = false;
+					return next;
+				}
+				throw new MyRuntimeException(new NoSuchElementException());
+			}
+
+		};
 	}
 
 	private void fillArgsToBind(PreparedStatement prepareS) {
