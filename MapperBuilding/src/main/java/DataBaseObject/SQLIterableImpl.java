@@ -17,17 +17,17 @@ public class SQLIterableImpl<T> implements SQLIterable<T> {
 
 	protected StringBuilder sqlStatement;
 	protected ConnectionStrategy connStr;
-	protected Constructor<T> constr;
+	protected Class<T> klass;
 	protected List<ColumnInfo> columnInfos;
 	private PreparedStatement cmd;
 	private boolean iteratorIsValid;
 	protected List<Object> argsToBind;
 
 	public SQLIterableImpl(String sqlStatement, ConnectionStrategy connStr,
-			Constructor<T> constr, List<ColumnInfo> columnsInfo) {
+			Class<T> klass, List<ColumnInfo> columnsInfo) {
 		this.sqlStatement = new StringBuilder(sqlStatement);
 		this.connStr = connStr;
-		this.constr = constr;
+		this.klass = klass;
 		this.columnInfos = columnsInfo;
 		iteratorIsValid = true;
 		argsToBind = new ArrayList<Object>();
@@ -39,7 +39,7 @@ public class SQLIterableImpl<T> implements SQLIterable<T> {
 		StringBuilder str = new StringBuilder(sqlStatement.toString());
 		str.append(" WHERE ");
 		str.append(clause);
-		return new SQLIterableAfterImpl<T>(str.toString(), connStr, constr, columnInfos,argsToBind);
+		return new SQLIterableAfterImpl<T>(str.toString(), connStr, klass, columnInfos,argsToBind);
 	}
 
 	@Override
@@ -86,7 +86,7 @@ public class SQLIterableImpl<T> implements SQLIterable<T> {
 			throw new RuntimeException(e);
 		}
 		fillArgsToBind(cmd);
-		return new IterableLazyObjects<T>(cmd,connStr,constr,columnInfos).iterator();
+		return new IterableLazyObjects<T>(cmd,connStr,klass,columnInfos).iterator();
 	}
 	
 	/*@Override

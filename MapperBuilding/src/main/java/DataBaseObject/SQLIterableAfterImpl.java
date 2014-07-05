@@ -10,9 +10,9 @@ import Strategy.Connections.ConnectionStrategy;
 public class SQLIterableAfterImpl<T> extends SQLIterableImpl<T> implements SQLExtensionMethods<T>{
 
 	public SQLIterableAfterImpl(String sqlStatement,
-			ConnectionStrategy connStr, Constructor<T> constr,
+			ConnectionStrategy connStr, Class<T> klass,
 			List<ColumnInfo> columnsInfo,List<Object> args) {
-		super(sqlStatement, connStr, constr, columnsInfo);
+		super(sqlStatement, connStr, klass, columnsInfo);
 		argsToBind = args;
 	}
 	
@@ -21,7 +21,7 @@ public class SQLIterableAfterImpl<T> extends SQLIterableImpl<T> implements SQLEx
 		StringBuilder str = new StringBuilder(sqlStatement.toString());
 		str.append(" AND ");
 		str.append(clause);
-		return new SQLIterableAfterImpl<T>(str.toString(), connStr, constr, columnInfos,argsToBind);
+		return new SQLIterableAfterImpl<T>(str.toString(), connStr, klass, columnInfos,argsToBind);
 	}
 
 
@@ -31,6 +31,6 @@ public class SQLIterableAfterImpl<T> extends SQLIterableImpl<T> implements SQLEx
 		list.addAll(argsToBind);
 		for(Object o:args)
 			list.add(o);
-		return new SQLIterableAfterImpl<T>(sqlStatement.toString(), connStr, constr, columnInfos,list);
+		return new SQLIterableAfterImpl<T>(sqlStatement.toString(), connStr, klass, columnInfos,list);
 	}
 }

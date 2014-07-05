@@ -1,6 +1,5 @@
 package MapperBuilder;
 
-import java.lang.reflect.Constructor;
 import java.util.List;
 
 import DataBaseObject.Association;
@@ -12,14 +11,12 @@ public class ForeignkeyObject {
 	public String Table;
 	public Association Type;
 	public String AttributeName;
-	public Constructor<?> Constr;
 	
-	public ForeignkeyObject(Class<?> klass,String table,List<ColumnInfo> columnInfos, Association type, String attributeName, Constructor<?> constr){
+	public ForeignkeyObject(Class<?> klass,String table,List<ColumnInfo> columnInfos, Association type, String attributeName){
 		this.Klass = klass;
 		this.Table = table;
 		this.ColumnInfos = columnInfos;
 		this.Type = type;
 		this.AttributeName = attributeName;
-		this.Constr= constr;
 	}
 }
