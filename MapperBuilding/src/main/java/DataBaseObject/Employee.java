@@ -24,36 +24,11 @@ public class Employee {
 	public String Notes;
 	public int ReportsTo;
 	public String PhotoPath;
-	
 	@ForeignKey(Type = Employee.class, Association = Association.Single, AttributeName="ReportsTo")
 	public Employee Report;
 	
-	public Employee(int employeeID, String lastName, String firstName,
-			String title, String titleOfCourtesy, Date birthDate,
-			Date hireDate, String address, String city, String region,
-			String postalCode, String country, String homePhone,
-			String extension, String photo, String notes, int reportsTo,
-			String photoPath) {
-		
-		EmployeeID = employeeID;
-		LastName = lastName;
-		FirstName = firstName;
-		Title = title;
-		TitleOfCourtesy = titleOfCourtesy;
-		BirthDate = birthDate;
-		HireDate = hireDate;
-		Address = address;
-		City = city;
-		Region = region;
-		PostalCode = postalCode;
-		Country = country;
-		HomePhone = homePhone;
-		Extension = extension;
-		Photo = photo;
-		Notes = notes;
-		ReportsTo = reportsTo;
-		PhotoPath = photoPath;
-	}
+	
+	
 	
 	@ForeignKey(Type = Employee.class, Association = Association.Single, AttributeName="ReportsTo")
 	public Employee getReport() {

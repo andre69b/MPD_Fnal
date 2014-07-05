@@ -20,37 +20,15 @@ public class Order {
 	public String ShipRegion;
 	public String ShipPostalCode;
 	public String ShipCountry;
-
 	@ForeignKey(Type = Customer.class, Association = Association.Single,AttributeName="CustomerID")
 	public Customer Customer;
-
 	@ForeignKey(Type = Employee.class, Association = Association.Single,AttributeName="EmployeeID")
 	public Employee Employee;
-
 	@ForeignKey(Type = Shipper.class, Association = Association.Single,AttributeName="ShipVia")
 	public Shipper Shipper;
 
-	public Order(int orderID, String customerID, int employeeID,
-			Date orderDate, Date requiredDate, Date shippedDate, int shipVia,
-			double freight, String shipName, String shipAddress,
-			String shipCity, String shipRegion, String shipPostalCode,
-			String shipCountry) {
-
-		OrderID = orderID;
-		CustomerID = customerID;
-		EmployeeID = employeeID;
-		OrderDate = orderDate;
-		RequiredDate = requiredDate;
-		ShippedDate = shippedDate;
-		ShipVia = shipVia;
-		Freight = freight;
-		ShipName = shipName;
-		ShipAddress = shipAddress;
-		ShipCity = shipCity;
-		ShipRegion = shipRegion;
-		ShipPostalCode = shipPostalCode;
-		ShipCountry = shipCountry;
-	}
+	
+	
 
 	@ForeignKey(Type = Customer.class, Association = Association.Single,AttributeName="CustomerID")
 	public Customer getCustomer() {
