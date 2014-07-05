@@ -8,11 +8,8 @@ public class Shipper {
 	public String CompanyName;
 	public String Phone;
 	
-	public Shipper(int shipperID, String companyName, String phone) {
-		ShipperID = shipperID;
-		CompanyName = companyName;
-		Phone = phone;
-	}
+	
+	
 	
 	@PrimaryKey
 	public int getShipperID() {
