@@ -7,36 +7,38 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import Exception.MyRuntimeException;
 import MapperBuilder.ColumnInfo;
 import Strategy.Connections.ConnectionStrategy;
 
-public class IterableLazyObjects<T> implements Iterable<T>{
-	
+public class IterableLazyObjects<T> implements Iterable<T> {
+
 	private PreparedStatement cmd;
 	private ConnectionStrategy connStr;
 	private List<ColumnInfo> columnsInfo;
 	private Class<T> klass;
 
-	public IterableLazyObjects(PreparedStatement cmd,ConnectionStrategy connStr,Class<T> klass, List<ColumnInfo> columnsInfo) {
+	public IterableLazyObjects(PreparedStatement cmd,
+			ConnectionStrategy connStr, Class<T> klass,
+			List<ColumnInfo> columnsInfo) {
 		this.cmd = cmd;
 		this.connStr = connStr;
 		this.klass = klass;
 		this.columnsInfo = columnsInfo;
 	}
-	
+
 	@Override
 	public Iterator<T> iterator() {
 		ResultSet rs;
 		try {
 			connStr.beginTransaction(true);
-			rs =  cmd.executeQuery();
+			rs = cmd.executeQuery();
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			throw new MyRuntimeException(e);
 		}
 		return new Iterator<T>() {
 			T next;
 			boolean containsNext = false;
-			
 
 			@Override
 			public boolean hasNext() {
@@ -46,20 +48,19 @@ public class IterableLazyObjects<T> implements Iterable<T>{
 					if (rs.next()) {
 						next = klass.newInstance();
 						int auxIndex = 0;
-						
-						for(ColumnInfo c:columnsInfo){
-							c.set(next, rs.getObject(columnsInfo.get(
-									auxIndex++).getName()));
+
+						for (ColumnInfo c : columnsInfo) {
+							c.set(next, rs.getObject(columnsInfo
+									.get(auxIndex++).getName()));
 						}
-						
+
 						containsNext = true;
 						return true;
 					}
 					return false;
-				} catch (IllegalArgumentException
-						| IllegalAccessException | SQLException
-						| InstantiationException e) {
-					throw new RuntimeException(e);
+				} catch (IllegalArgumentException | IllegalAccessException
+						| SQLException | InstantiationException e) {
+					throw new MyRuntimeException(e);
 				}
 			}
 
@@ -69,7 +70,7 @@ public class IterableLazyObjects<T> implements Iterable<T>{
 					containsNext = false;
 					return next;
 				}
-				throw new NoSuchElementException();
+				throw new MyRuntimeException(new NoSuchElementException());
 			}
 
 		};

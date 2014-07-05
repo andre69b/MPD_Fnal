@@ -4,16 +4,18 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 
-import DataBaseObject.PrimaryKey;
+import Exception.MyRuntimeException;
 import MapperBuilder.ColumnInfo;
 
 public class FieldsMappingStrategy extends AbstractMapping {
-	
-	private class FieldsColumnInfo implements ColumnInfo{
+
+	private class FieldsColumnInfo implements ColumnInfo {
 		Field field;
-		public FieldsColumnInfo (Field field){
-			this.field=field;
+
+		public FieldsColumnInfo(Field field) {
+			this.field = field;
 		}
+
 		@Override
 		public String getName() {
 			return field.getName();
@@ -25,20 +27,17 @@ public class FieldsMappingStrategy extends AbstractMapping {
 			try {
 				ret = field.get(obj);
 			} catch (IllegalArgumentException | IllegalAccessException e) {
-				int todo;
-				//TODO
-				e.printStackTrace();
+				throw new MyRuntimeException(e);
 			}
 			return ret;
 		}
+
 		@Override
 		public void set(Object val, Object value) {
 			try {
-				field.set(val,value);
+				field.set(val, value);
 			} catch (IllegalArgumentException | IllegalAccessException e) {
-				int todo;
-				//TODO
-				e.printStackTrace();
+				throw new MyRuntimeException(e);
 			}
 		}
 	}
@@ -50,11 +49,11 @@ public class FieldsMappingStrategy extends AbstractMapping {
 
 	@Override
 	protected ColumnInfo createColumnInfo(Member member) {
-		return new FieldsColumnInfo((Field)member);
+		return new FieldsColumnInfo((Field) member);
 	}
 
 	@Override
 	protected Annotation[] getMemberAnnotations(Member member) {
-		return ((Field)member).getDeclaredAnnotations();
+		return ((Field) member).getDeclaredAnnotations();
 	}
 }

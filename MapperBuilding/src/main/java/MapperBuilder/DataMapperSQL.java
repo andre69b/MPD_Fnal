@@ -1,11 +1,11 @@
 package MapperBuilder;
 
-import java.lang.reflect.Constructor;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
 import DataBaseObject.SQLIterableImpl;
+import Exception.MyRuntimeException;
 import Strategy.Connections.ConnectionStrategy;
 
 public class DataMapperSQL<T> implements DataMapper<T> {
@@ -28,7 +28,7 @@ public class DataMapperSQL<T> implements DataMapper<T> {
 	@Override
 	public SQLIterableImpl<T> getAll() {
 		return new SQLIterableImpl<T>("SELECT * FROM " + nameTable, connStr,
-				klass,columnsInfo);
+				klass, columnsInfo);
 	}
 
 	@Override
@@ -46,13 +46,14 @@ public class DataMapperSQL<T> implements DataMapper<T> {
 			PreparedStatement cmd = connStr.getConnection().prepareStatement(
 					prepareStamentString.toString());
 
-			fillPrepareStament(cmd,nameTable,primaryKey.getName(), primaryKey.get(val));
+			fillPrepareStament(cmd, nameTable, primaryKey.getName(),
+					primaryKey.get(val));
 
 			cmd.executeUpdate();
 			connStr.commit();
 		} catch (SQLException e) {
 			connStr.rollback();
-			throw new RuntimeException(e);
+			throw new MyRuntimeException(e);
 		}
 	}
 
@@ -62,13 +63,14 @@ public class DataMapperSQL<T> implements DataMapper<T> {
 			connStr.beginTransaction(false);
 			PreparedStatement cmd = connStr.getConnection().prepareStatement(
 					"DELETE FROM ? WHERE ?=?");
-			fillPrepareStament(cmd,nameTable,primaryKey.getName(), primaryKey.get(val));
+			fillPrepareStament(cmd, nameTable, primaryKey.getName(),
+					primaryKey.get(val));
 
 			cmd.executeUpdate();
 			connStr.commit();
 		} catch (SQLException e) {
 			connStr.rollback();
-			throw new RuntimeException(e);
+			throw new MyRuntimeException(e);
 		}
 	}
 
@@ -89,24 +91,25 @@ public class DataMapperSQL<T> implements DataMapper<T> {
 
 			cmd = connStr.getConnection().prepareStatement(
 					prepareStamentString.toString());
-			
-			fillPrepareStament(cmd,nameTable);
+
+			fillPrepareStament(cmd, nameTable);
 
 			cmd.executeUpdate();
 			connStr.commit();
 		} catch (SQLException e) {
 			connStr.rollback();
-			throw new RuntimeException(e);
+			throw new MyRuntimeException(e);
 		}
 	}
-	
-	private void fillPrepareStament(PreparedStatement prepareS,Object... argsToPrepareStament) {
+
+	private void fillPrepareStament(PreparedStatement prepareS,
+			Object... argsToPrepareStament) {
 		if (argsToPrepareStament != null && argsToPrepareStament.length > 0) {
 			for (int i = 0; i < argsToPrepareStament.length; ++i) {
 				try {
-					prepareS.setObject(i+1, argsToPrepareStament[i]);
+					prepareS.setObject(i + 1, argsToPrepareStament[i]);
 				} catch (SQLException e) {
-					throw new RuntimeException(e);
+					throw new MyRuntimeException(e);
 				}
 			}
 		}

@@ -2,6 +2,8 @@ package Strategy.Connections;
 
 import java.sql.SQLException;
 
+import Exception.MyRuntimeException;
+
 public class SingleCall extends AbstractConnection {
 	public SingleCall() {
 		super();
@@ -14,11 +16,11 @@ public class SingleCall extends AbstractConnection {
 				connection.rollback();
 				close();
 			} else {
-				throw new UnsupportedOperationException(
-						"Connection already closed.");
+				throw new MyRuntimeException(new UnsupportedOperationException(
+						"Connection already closed."));
 			}
 		} catch (SQLException ex) {
-			throw new RuntimeException(ex);
+			throw new MyRuntimeException(ex);
 		}
 	}
 
@@ -29,11 +31,11 @@ public class SingleCall extends AbstractConnection {
 				connection.commit();
 				close();
 			} else {
-				throw new UnsupportedOperationException(
-						"Connection already closed.");
+				throw new MyRuntimeException(new UnsupportedOperationException(
+						"Connection already closed."));
 			}
 		} catch (SQLException ex) {
-			throw new RuntimeException(ex);
+			throw new MyRuntimeException(ex);
 		}
 	}
 
@@ -44,7 +46,7 @@ public class SingleCall extends AbstractConnection {
 			connection = ds.getConnection();
 			connection.setAutoCommit(autocommit);
 		} catch (SQLException ex) {
-			throw new RuntimeException(ex);
+			throw new MyRuntimeException(ex);
 		}
 	}
 }

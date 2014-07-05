@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 
+import Exception.MyRuntimeException;
 import MapperBuilder.ColumnInfo;
 
 public class PropertiesMappingStrategy extends AbstractMapping {
@@ -33,8 +34,7 @@ public class PropertiesMappingStrategy extends AbstractMapping {
 				ret = method.invoke(obj);
 			} catch (IllegalAccessException | IllegalArgumentException
 					| InvocationTargetException e) {
-				int todo;
-				e.printStackTrace();
+				throw new MyRuntimeException(e);
 			}
 			return ret;
 		}
@@ -45,8 +45,7 @@ public class PropertiesMappingStrategy extends AbstractMapping {
 				method.invoke(val, value);
 			} catch (IllegalAccessException | IllegalArgumentException
 					| InvocationTargetException e) {
-				int todo;
-				e.printStackTrace();
+				throw new MyRuntimeException(e);
 			}
 		}
 	}
