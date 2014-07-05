@@ -15,6 +15,29 @@ import Strategy.Mappers.FieldsMappingStrategy;
 public class DataMapperTest {
 	
 	@Test
+	public void TestForIteratorsIterable(){
+		Builder b = new Builder(new FieldsMappingStrategy(),new SingletonConnection());
+		DataMapper<Customer> prodMapper = b.build(Customer.class);
+		SQLIterableImpl<Customer> curts = prodMapper.getAll();
+		SQLExtensionMethods<Customer> sqlBind = curts.where("Country=? AND Country<>?");
+		
+		SQLExtensionMethods<Customer> f = sqlBind.bind("France","Portugal");
+		f.iterator().next().getOrders().forEach(x->System.out.println(x.CustomerID));
+		Assert.assertEquals("France", "France");
+	}
+	
+	@Test
+	public void TestForIterators(){
+		Builder b = new Builder(new FieldsMappingStrategy(),new SingletonConnection());
+		DataMapper<Customer> prodMapper = b.build(Customer.class);
+		SQLIterableImpl<Customer> curts = prodMapper.getAll();
+		SQLExtensionMethods<Customer> sqlBind = curts.where("Country=? AND Country<>?");
+		
+		SQLExtensionMethods<Customer> f = sqlBind.bind("France","Portugal");
+		Assert.assertEquals("France", f.iterator().next().Country);
+	}
+	
+	@Test
 	public void TestForModeThanOneInstance(){
 		Builder b = new Builder(new FieldsMappingStrategy(),new SingletonConnection());
 		DataMapper<Customer> prodMapper = b.build(Customer.class);

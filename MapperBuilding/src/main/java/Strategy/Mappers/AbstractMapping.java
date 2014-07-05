@@ -3,9 +3,13 @@ package Strategy.Mappers;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Member;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import DataBaseObject.EDTable;
@@ -68,9 +72,10 @@ public abstract class AbstractMapping implements MappingStrategy {
 				continue;
 			}
 			Annotation a = annotations[0];
-			if (primaryKey == null && a instanceof PrimaryKey) {
+			if ((map.get("primaryKey")) == null && a instanceof PrimaryKey) {
 				ret.add(ci);
-				primaryKey = ci;
+				map.put("primaryKey",Arrays.asList(ci));
+				//primaryKey = ci;
 		
 				continue;
 			}
@@ -78,9 +83,9 @@ public abstract class AbstractMapping implements MappingStrategy {
 				ForeignKey v = (ForeignKey) a;
 				Class<?> k = v.Type();
 				++currentLevel;
-				ret2.add(new ForeignkeyObject(k, ((EDTable) k
+				ret2.add(new ForeignkeyObject<>(k, ((EDTable) k
 						.getAnnotation(EDTable.class)).TableName(), 
-						getColumnInfoAndFillPrimaryKey(k).get("ColumnInfo"), v
+						getColumnInfoAndFillPrimaryKey(k), v
 						.Association(), v.AttributeName(),ci,connStr));
 				--currentLevel;
 			}
