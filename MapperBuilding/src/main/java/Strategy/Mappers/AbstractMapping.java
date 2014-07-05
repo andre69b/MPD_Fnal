@@ -40,7 +40,6 @@ public abstract class AbstractMapping implements MappingStrategy{
 
 		Constructor<T> constr = (Constructor<T>)getConstrutor(klass, nameColumns.size());
 		
-		
 		return new DataMapperSQL<T>(Table.TableName(), connStr, klass, nameColumns, primaryKey,constr);
 	}
 	
