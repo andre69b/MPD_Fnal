@@ -15,22 +15,20 @@ public class DataMapperSQL<T> implements DataMapper<T> {
 	private Class<T> klass;
 	private List<ColumnInfo> columnsInfo;
 	private ColumnInfo primaryKey;
-	private Constructor<T> constr;
 
 	public DataMapperSQL(String nameTable, ConnectionStrategy conn,
-			Class<T> klass, List<ColumnInfo> nameColumns, ColumnInfo primaryKey,Constructor<T> constr) {
+			Class<T> klass, List<ColumnInfo> nameColumns, ColumnInfo primaryKey) {
 		this.nameTable = nameTable;
 		this.connStr = conn;
 		this.klass = klass;
 		this.columnsInfo = nameColumns;
 		this.primaryKey = primaryKey;
-		this.constr=constr;
 	}
 
 	@Override
 	public SQLIterableImpl<T> getAll() {
 		return new SQLIterableImpl<T>("SELECT * FROM " + nameTable, connStr,
-				constr, columnsInfo);
+				klass,columnsInfo);
 	}
 
 	@Override

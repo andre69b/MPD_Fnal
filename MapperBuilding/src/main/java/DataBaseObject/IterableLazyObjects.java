@@ -1,7 +1,5 @@
 package DataBaseObject;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,12 +15,12 @@ public class IterableLazyObjects<T> implements Iterable<T>{
 	private PreparedStatement cmd;
 	private ConnectionStrategy connStr;
 	private List<ColumnInfo> columnsInfo;
-	private Constructor<T> constr;
+	private Class<T> klass;
 
-	public IterableLazyObjects(PreparedStatement cmd,ConnectionStrategy connStr,Constructor<T> constr, List<ColumnInfo> columnsInfo) {
+	public IterableLazyObjects(PreparedStatement cmd,ConnectionStrategy connStr,Class<T> klass, List<ColumnInfo> columnsInfo) {
 		this.cmd = cmd;
 		this.connStr = connStr;
-		this.constr = constr;
+		this.klass = klass;
 		this.columnsInfo = columnsInfo;
 	}
 	
@@ -46,19 +44,19 @@ public class IterableLazyObjects<T> implements Iterable<T>{
 					if (containsNext)
 						return true;
 					if (rs.next()) {
-						int auxIndex = 0, columnsSize = columnsInfo.size();
-						Object[] objs = new Object[columnsSize];
-						while (auxIndex < columnsSize-1) {
-							objs[auxIndex] = rs.getObject(columnsInfo.get(
-									auxIndex).getName());
-							auxIndex++;
+						next = klass.newInstance();
+						int auxIndex = 0;
+						
+						for(ColumnInfo c:columnsInfo){
+							c.set(next, rs.getObject(columnsInfo.get(
+									auxIndex++).getName()));
 						}
-						next = constr.newInstance(objs);
+						
 						containsNext = true;
 						return true;
 					}
 					return false;
-				} catch (InvocationTargetException | IllegalArgumentException
+				} catch (IllegalArgumentException
 						| IllegalAccessException | SQLException
 						| InstantiationException e) {
 					throw new RuntimeException(e);

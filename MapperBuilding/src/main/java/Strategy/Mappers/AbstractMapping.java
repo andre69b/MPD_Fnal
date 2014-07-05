@@ -36,18 +36,16 @@ public abstract class AbstractMapping implements MappingStrategy{
 		primaryKey = null;
 		List<ColumnInfo> nameColumns = getColumnInfoAndFillPrimaryKey(klass);
 		
-		setIterablesWithForeignKey(connStr,null,null);
-
-		Constructor<T> constr = (Constructor<T>)getConstrutor(klass, nameColumns.size());
+		//setIterablesWithForeignKey(connStr,null,null);
 		
-		return new DataMapperSQL<T>(Table.TableName(), connStr, klass, nameColumns, primaryKey,constr);
+		return new DataMapperSQL<T>(Table.TableName(), connStr, klass, nameColumns, primaryKey);
 	}
 	
-	private <T> void setIterablesWithForeignKey(ConnectionStrategy connStr,List<ColumnInfo> nameColumns,Constructor<T> constr) {
+	/*private <T> void setIterablesWithForeignKey(ConnectionStrategy connStr,List<ColumnInfo> nameColumns,Class<T> klass) {
 		PreparedStatement pre = null;
 		
-		new IterableLazyObjects<T>(pre,connStr,constr,nameColumns);
-	}
+		new IterableLazyObjects<T>(pre,connStr,klass,nameColumns);
+	}*/
 
 	protected abstract <T> Member[] getMembers(Class<T> klass);
 	protected abstract ColumnInfo createColumnInfo(Member member);
@@ -88,22 +86,21 @@ public abstract class AbstractMapping implements MappingStrategy{
 						((EDTable)k.getAnnotation(EDTable.class)).TableName(),
 						list,
 						v.Association(),
-						v.AttributeName(),
-						getConstrutor(k,list.size())
+						v.AttributeName()
 				));
 				--currentLevel;
 			}
 		}
 		return ret;
 	}
-	private  Constructor<?> getConstrutor(Class<?> klass, int numberOfParameters){
+	/*private  Constructor<?> getConstrutor(Class<?> klass, int numberOfParameters){
 		try {
 			return  Arrays.stream(klass.getConstructors())
-					.filter(x -> x.getParameterCount() == numberOfParameters)
+					.filter(x -> x.getParameterCount() == 0)
 					.findFirst()
 					.get();
 		} catch (NoSuchElementException e) {
 			throw new UnsupportedOperationException("All ED must have a Constructor with all parameters!");
 		}	
-	}
+	}*/
 }
