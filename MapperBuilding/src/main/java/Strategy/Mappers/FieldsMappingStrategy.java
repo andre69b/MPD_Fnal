@@ -31,6 +31,16 @@ public class FieldsMappingStrategy extends AbstractMapping {
 			}
 			return ret;
 		}
+		@Override
+		public void set(Object val, Object value) {
+			try {
+				field.set(val,value);
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+				int todo;
+				//TODO
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override
