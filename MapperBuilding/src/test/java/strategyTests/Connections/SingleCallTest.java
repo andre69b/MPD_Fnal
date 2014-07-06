@@ -9,13 +9,13 @@ import java.sql.SQLException;
 
 import org.junit.Test;
 
-import Strategy.Connections.SingleCall;
+import Strategy.Connections.SingleCallConnection;
 
 public class SingleCallTest  {
 	
 	@Test
 	public void SingleCall() throws SQLException{
-		SingleCall sc = new SingleCall();
+		SingleCallConnection sc = new SingleCallConnection();
 		sc.beginConnection(false);
 		Connection c =sc.getConnection();
 		

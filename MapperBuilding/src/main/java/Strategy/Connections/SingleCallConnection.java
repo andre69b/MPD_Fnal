@@ -4,8 +4,8 @@ import java.sql.SQLException;
 
 import Exception.MyRuntimeException;
 
-public class SingleCall extends AbstractConnection {
-	public SingleCall() {
+public class SingleCallConnection extends AbstractConnection {
+	public SingleCallConnection() {
 		super();
 	}
 
