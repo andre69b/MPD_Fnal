@@ -4,7 +4,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -20,13 +19,13 @@ public class SQLIterableImpl<T> implements SQLIterable<T> {
 	protected StringBuilder sqlStatement;
 	protected ConnectionStrategy connStr;
 	protected Class<T> klass;
-	protected Map<String,List<ColumnInfo>> mapColumns;
+	protected Map<String, List<ColumnInfo>> mapColumns;
 	private PreparedStatement cmd;
 	private boolean iteratorIsValid;
 	protected List<Object> argsToBind;
 
 	public SQLIterableImpl(String sqlStatement, ConnectionStrategy connStr,
-			Class<T> klass, Map<String,List<ColumnInfo>> columnsInfo) {
+			Class<T> klass, Map<String, List<ColumnInfo>> columnsInfo) {
 		this.sqlStatement = new StringBuilder(sqlStatement);
 		this.connStr = connStr;
 		this.klass = klass;
@@ -73,16 +72,7 @@ public class SQLIterableImpl<T> implements SQLIterable<T> {
 	public Iterator<T> iterator() {
 		if (!iteratorIsValid)
 			throw new MyRuntimeException(new IllegalAccessException());
-		/*try {
-			cmd = connStr.getConnection().prepareStatement(
-					sqlStatement.toString());
-		} catch (SQLException e) {
-			throw new MyRuntimeException(e);
-		}*/
-		
-		/*return new IterableLazyObjects<T>(cmd.toString(), connStr, klass, mapColumns)
-				.iterator();*/
-		
+
 		ResultSet rs;
 		try {
 			connStr.beginTransaction(true);
@@ -98,7 +88,7 @@ public class SQLIterableImpl<T> implements SQLIterable<T> {
 			boolean containsNext = false;
 			List<ColumnInfo> foreignKeyObjects;
 			List<ColumnInfo> columnsInfo;
-			
+
 			@Override
 			public boolean hasNext() {
 				try {
@@ -111,20 +101,24 @@ public class SQLIterableImpl<T> implements SQLIterable<T> {
 						int auxIndex = 0;
 
 						for (ColumnInfo c : columnsInfo) {
-							c.set(next, rs.getObject(columnsInfo
-									.get(auxIndex++).getName()));
+							String s = columnsInfo.get(auxIndex++).getName();
+							Object x = rs.getObject(s);
+							if (x != null)
+								c.set(next, x);
 						}
-						
-						if(foreignKeyObjects!=null){
+
+						if (foreignKeyObjects != null) {
 							for (ColumnInfo c : foreignKeyObjects) {
-								ForeignkeyObject fO = (ForeignkeyObject)c;
-								c.set(next,
-									  columnsInfo.stream()
-										  .filter(x->x.getName().equals(fO.attributeName))
-										  .findFirst()
-										  .get()
-										  .get(next));
-							}	
+								@SuppressWarnings("rawtypes")
+								ForeignkeyObject fO = (ForeignkeyObject) c;
+								Object o = columnsInfo
+										.stream()
+										.filter(x -> x.getName().equals(
+												fO.attributeName)).findFirst()
+										.get().get(next);
+								if (o != null)
+									c.set(next, o);
+							}
 						}
 						containsNext = true;
 						return true;

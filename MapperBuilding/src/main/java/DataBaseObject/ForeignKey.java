@@ -9,6 +9,7 @@ import java.lang.annotation.Target;
 @Target({ ElementType.METHOD, ElementType.FIELD })
 public @interface ForeignKey {
 	public Class<?> Type();
+	public String KeyName();
 	public Association Association();
 	public String AttributeName();
 }

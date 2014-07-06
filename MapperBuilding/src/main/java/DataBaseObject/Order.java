@@ -1,6 +1,7 @@
 package DataBaseObject;
 
-import java.sql.Date;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 
 @EDTable(TableName = "Orders")
 public class Order {
@@ -9,28 +10,28 @@ public class Order {
 	public int OrderID;
 	public String CustomerID;
 	public int EmployeeID;
-	public Date OrderDate;
-	public Date RequiredDate;
-	public Date ShippedDate;
+	public Timestamp OrderDate;
+	public Timestamp RequiredDate;
+	public Timestamp ShippedDate;
 	public int ShipVia;
-	public double Freight;
+	public BigDecimal Freight;
 	public String ShipName;
 	public String ShipAddress;
 	public String ShipCity;
 	public String ShipRegion;
 	public String ShipPostalCode;
 	public String ShipCountry;
-	@ForeignKey(Type = Customer.class, Association = Association.Single,AttributeName="CustomerID")
+	@ForeignKey(Type = Customer.class,KeyName="CustomerID", Association = Association.Single,AttributeName="CustomerID")
 	public Customer Customer;
-	@ForeignKey(Type = Employee.class, Association = Association.Single,AttributeName="EmployeeID")
+	@ForeignKey(Type = Employee.class,KeyName="EmployeeID",Association = Association.Single,AttributeName="EmployeeID")
 	public Employee Employee;
-	@ForeignKey(Type = Shipper.class, Association = Association.Single,AttributeName="ShipVia")
+	@ForeignKey(Type = Shipper.class, KeyName="ShipperID",Association = Association.Single,AttributeName="ShipVia")
 	public Shipper Shipper;
 
 	
 	
 
-	@ForeignKey(Type = Customer.class, Association = Association.Single,AttributeName="CustomerID")
+	@ForeignKey(Type = Customer.class,KeyName="CustomerID", Association = Association.Single,AttributeName="CustomerID")
 	public Customer getCustomer() {
 		return Customer;
 	}
@@ -39,7 +40,7 @@ public class Order {
 		Customer = customer;
 	}
 
-	@ForeignKey(Type = Employee.class, Association = Association.Single,AttributeName="EmployeeID")
+	@ForeignKey(Type = Employee.class,KeyName="EmployeeID",Association = Association.Single,AttributeName="EmployeeID")
 	public Employee getEmployee() {
 		return Employee;
 	}
@@ -48,7 +49,7 @@ public class Order {
 		Employee = employee;
 	}
 	
-	@ForeignKey(Type = Shipper.class, Association = Association.Single,AttributeName="ShipVia")
+	@ForeignKey(Type = Shipper.class, KeyName="ShipperID",Association = Association.Single,AttributeName="ShipVia")
 	public Shipper getShipper() {
 		return Shipper;
 	}
@@ -82,27 +83,27 @@ public class Order {
 		EmployeeID = employeeID;
 	}
 
-	public Date getOrderDate() {
+	public Timestamp getOrderDate() {
 		return OrderDate;
 	}
 
-	public void setOrderDate(Date orderDate) {
+	public void setOrderDate(Timestamp orderDate) {
 		OrderDate = orderDate;
 	}
 
-	public Date getRequiredDate() {
+	public Timestamp getRequiredDate() {
 		return RequiredDate;
 	}
 
-	public void setRequiredDate(Date requiredDate) {
+	public void setRequiredDate(Timestamp requiredDate) {
 		RequiredDate = requiredDate;
 	}
 
-	public Date getShippedDate() {
+	public Timestamp getShippedDate() {
 		return ShippedDate;
 	}
 
-	public void setShippedDate(Date shippedDate) {
+	public void setShippedDate(Timestamp shippedDate) {
 		ShippedDate = shippedDate;
 	}
 
@@ -114,11 +115,11 @@ public class Order {
 		ShipVia = shipVia;
 	}
 
-	public double getFreight() {
+	public BigDecimal getFreight() {
 		return Freight;
 	}
 
-	public void setFreight(double freight) {
+	public void setFreight(BigDecimal freight) {
 		Freight = freight;
 	}
 

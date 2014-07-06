@@ -1,6 +1,7 @@
 package DataBaseObject;
 
-import java.sql.Date;
+import java.sql.Timestamp;
+
 
 @EDTable(TableName = "Employees")
 public class Employee {
@@ -11,8 +12,8 @@ public class Employee {
 	public String FirstName;
 	public String Title;
 	public String TitleOfCourtesy;
-	public Date BirthDate;
-	public Date HireDate;
+	public Timestamp BirthDate;
+	public Timestamp HireDate;
 	public String Address;
 	public String City;
 	public String Region;
@@ -20,17 +21,17 @@ public class Employee {
 	public String Country;
 	public String HomePhone;
 	public String Extension;
-	public String Photo;
+	public byte[] Photo;
 	public String Notes;
 	public int ReportsTo;
 	public String PhotoPath;
-	@ForeignKey(Type = Employee.class, Association = Association.Single, AttributeName="ReportsTo")
+	@ForeignKey(Type = Employee.class,KeyName="EmployeeID", Association = Association.Single, AttributeName="ReportsTo")
 	public Employee Report;
 	
 	
 	
 	
-	@ForeignKey(Type = Employee.class, Association = Association.Single, AttributeName="ReportsTo")
+	@ForeignKey(Type = Employee.class,KeyName="EmployeeID", Association = Association.Single, AttributeName="ReportsTo")
 	public Employee getReport() {
 		return Report;
 	}
@@ -80,19 +81,19 @@ public class Employee {
 		TitleOfCourtesy = titleOfCourtesy;
 	}
 
-	public Date getBirthDate() {
+	public Timestamp getBirthDate() {
 		return BirthDate;
 	}
 
-	public void setBirthDate(Date birthDate) {
+	public void setBirthDate(Timestamp birthDate) {
 		BirthDate = birthDate;
 	}
 
-	public Date getHireDate() {
+	public Timestamp getHireDate() {
 		return HireDate;
 	}
 
-	public void setHireDate(Date hireDate) {
+	public void setHireDate(Timestamp hireDate) {
 		HireDate = hireDate;
 	}
 
@@ -152,11 +153,11 @@ public class Employee {
 		Extension = extension;
 	}
 
-	public String getPhoto() {
+	public byte[]  getPhoto() {
 		return Photo;
 	}
 
-	public void setPhoto(String photo) {
+	public void setPhoto(byte[]  photo) {
 		Photo = photo;
 	}
 

@@ -15,13 +15,13 @@ public class Customer {
 	public String Country;
 	public String Phone;
 	public String Fax;
-	@ForeignKey(Type = Order.class, Association = Association.Multiple,AttributeName="CustomerID")
+	@ForeignKey(Type = Order.class,KeyName="CustomerID", Association = Association.Multiple,AttributeName="CustomerID")
 	public Iterable<Order> Orders;
 	
 	
 	
 	
-	@ForeignKey(Type = Order.class, Association = Association.Multiple,AttributeName="CustomerID")
+	@ForeignKey(Type = Order.class,KeyName="CustomerID",Association = Association.Multiple,AttributeName="CustomerID")
 	public Iterable<Order> getOrders() {
 		return Orders;
 	}

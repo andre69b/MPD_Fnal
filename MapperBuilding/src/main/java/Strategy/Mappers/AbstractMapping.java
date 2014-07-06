@@ -4,12 +4,9 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 
 import DataBaseObject.EDTable;
@@ -31,7 +28,7 @@ public abstract class AbstractMapping implements MappingStrategy {
 
 	@Override
 	public <T> DataMapper<T> build(Class<T> klass, ConnectionStrategy connStr) {
-		
+
 		this.connStr = connStr;
 		EDTable Table = (EDTable) klass.getAnnotation(EDTable.class);
 		if (Table == null)
@@ -39,7 +36,7 @@ public abstract class AbstractMapping implements MappingStrategy {
 					"All ED must have an EDTableAttribute with its TableName!"));
 
 		primaryKey = null;
-		Map<String,List<ColumnInfo>> mapColumns = getColumnInfoAndFillPrimaryKey(klass);
+		Map<String, List<ColumnInfo>> mapColumns = getColumnInfoAndFillPrimaryKey(klass);
 
 		return new DataMapperSQL<T>(Table.TableName(), connStr, klass,
 				mapColumns, primaryKey);
@@ -51,8 +48,9 @@ public abstract class AbstractMapping implements MappingStrategy {
 
 	protected abstract Annotation[] getMemberAnnotations(Member member);
 
-	protected <T> Map<String,List<ColumnInfo>> getColumnInfoAndFillPrimaryKey(Class<T> klass) {
-		Map<String,List<ColumnInfo>> map = new HashMap<String, List<ColumnInfo>>();
+	protected <T> Map<String, List<ColumnInfo>> getColumnInfoAndFillPrimaryKey(
+			Class<T> klass) {
+		Map<String, List<ColumnInfo>> map = new HashMap<String, List<ColumnInfo>>();
 		Member[] members = getMembers(klass);
 		List<ColumnInfo> ret = new ArrayList<ColumnInfo>(members.length);
 		List<ColumnInfo> ret2 = new LinkedList<ColumnInfo>();
@@ -74,9 +72,9 @@ public abstract class AbstractMapping implements MappingStrategy {
 			Annotation a = annotations[0];
 			if ((map.get("primaryKey")) == null && a instanceof PrimaryKey) {
 				ret.add(ci);
-				map.put("primaryKey",Arrays.asList(ci));
-				//primaryKey = ci;
-		
+				map.put("primaryKey", Arrays.asList(ci));
+				// primaryKey = ci;
+
 				continue;
 			}
 			if (currentLevel < LEVEL && a instanceof ForeignKey) {
@@ -84,16 +82,16 @@ public abstract class AbstractMapping implements MappingStrategy {
 				Class<?> k = v.Type();
 				++currentLevel;
 				ret2.add(new ForeignkeyObject<>(k, ((EDTable) k
-						.getAnnotation(EDTable.class)).TableName(), 
-						getColumnInfoAndFillPrimaryKey(k), v
-						.Association(), v.AttributeName(),ci,connStr));
+						.getAnnotation(EDTable.class)).TableName(),v.KeyName(),
+						getColumnInfoAndFillPrimaryKey(k), v.Association(), v
+								.AttributeName(), ci, connStr));
 				--currentLevel;
 			}
 		}
-		
+
 		map.put("ColumnInfo", ret);
 		map.put("ForeignKeyObject", ret2);
-		
+
 		return map;
 	}
 }

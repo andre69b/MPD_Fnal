@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import DataBaseObject.SQLExtensionMethods;
 import DataBaseObject.SQLIterableImpl;
 import Exception.MyRuntimeException;
 import Strategy.Connections.ConnectionStrategy;
@@ -15,11 +16,12 @@ public class DataMapperSQL<T> implements DataMapper<T> {
 	private String nameTable;
 	private Class<T> klass;
 	private List<ColumnInfo> columnsInfo;
-	private Map<String,List<ColumnInfo>> mapColumns;
+	private Map<String, List<ColumnInfo>> mapColumns;
 	private ColumnInfo primaryKey;
 
 	public DataMapperSQL(String nameTable, ConnectionStrategy conn,
-			Class<T> klass, Map<String,List<ColumnInfo>> mapColumns, ColumnInfo primaryKey) {
+			Class<T> klass, Map<String, List<ColumnInfo>> mapColumns,
+			ColumnInfo primaryKey) {
 		this.nameTable = nameTable;
 		this.connStr = conn;
 		this.klass = klass;
@@ -32,6 +34,13 @@ public class DataMapperSQL<T> implements DataMapper<T> {
 	public SQLIterableImpl<T> getAll() {
 		return new SQLIterableImpl<T>("SELECT * FROM " + nameTable, connStr,
 				klass, mapColumns);
+	}
+
+	@Override
+	public T getById(Object value,String attributeName) {
+		return new SQLIterableImpl<T>("SELECT * FROM " + nameTable, connStr,
+						klass, mapColumns).where(attributeName + "= ?")
+						.bind(value).iterator().next();
 	}
 
 	@Override
@@ -117,5 +126,4 @@ public class DataMapperSQL<T> implements DataMapper<T> {
 			}
 		}
 	}
-
 }
