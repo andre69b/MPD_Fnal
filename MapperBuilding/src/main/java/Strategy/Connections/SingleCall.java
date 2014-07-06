@@ -40,7 +40,7 @@ public class SingleCall extends AbstractConnection {
 	}
 
 	@Override
-	public void beginTransaction(boolean autocommit) {
+	public void beginConnection(boolean autocommit) {
 		try {
 			close();
 			connection = ds.getConnection();

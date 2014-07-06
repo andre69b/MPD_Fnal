@@ -1,5 +1,6 @@
-package MapperBuilder;
+package Strategy.Mappers;
 
+import MapperBuilder.DataMapper;
 import Strategy.Connections.ConnectionStrategy;
 
 public interface MappingStrategy {

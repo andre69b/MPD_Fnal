@@ -5,7 +5,7 @@ import java.sql.Connection;
 public interface ConnectionStrategy {
 	Connection getConnection();
 
-	void beginTransaction(boolean autocommit);
+	void beginConnection(boolean autocommit);
 
 	void rollback();
 

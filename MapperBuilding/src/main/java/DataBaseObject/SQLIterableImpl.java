@@ -49,7 +49,7 @@ public class SQLIterableImpl<T> implements SQLIterable<T> {
 		iteratorIsValid = false;
 		int returnElements = -1;
 		try {
-			connStr.beginTransaction(true);
+			connStr.beginConnection(true);
 			String statementWithCount = sqlStatement.toString().replace("*",
 					"COUNT(*) as count");
 			cmd = connStr.getConnection().prepareStatement(statementWithCount);
@@ -75,7 +75,7 @@ public class SQLIterableImpl<T> implements SQLIterable<T> {
 
 		ResultSet rs;
 		try {
-			connStr.beginTransaction(true);
+			connStr.beginConnection(true);
 			PreparedStatement cmd = connStr.getConnection().prepareStatement(
 					sqlStatement.toString());
 			fillArgsToBind(cmd);

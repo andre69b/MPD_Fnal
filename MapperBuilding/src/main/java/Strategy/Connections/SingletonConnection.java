@@ -44,7 +44,7 @@ public class SingletonConnection extends AbstractConnection {
 	}
 
 	@Override
-	public void beginTransaction(boolean autocommit) {
+	public void beginConnection(boolean autocommit) {
 		try {
 			if (connection != null) {
 				connection.setAutoCommit(autocommit);

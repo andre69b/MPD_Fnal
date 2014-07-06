@@ -15,7 +15,7 @@ public class SingletonConnectionTest {
 	@Test
 	public void SingletonConnection() throws SQLException{
 		SingletonConnection sc = new SingletonConnection();
-		sc.beginTransaction(false);
+		sc.beginConnection(false);
 		Connection c =sc.getConnection();
 		
 		PreparedStatement cmd = c.prepareStatement(

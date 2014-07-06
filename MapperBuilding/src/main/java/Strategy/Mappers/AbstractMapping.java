@@ -17,7 +17,6 @@ import MapperBuilder.ColumnInfo;
 import MapperBuilder.DataMapper;
 import MapperBuilder.DataMapperSQL;
 import MapperBuilder.ForeignkeyObject;
-import MapperBuilder.MappingStrategy;
 import Strategy.Connections.ConnectionStrategy;
 
 public abstract class AbstractMapping implements MappingStrategy {
