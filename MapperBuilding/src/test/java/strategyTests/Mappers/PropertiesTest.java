@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 
@@ -22,10 +23,10 @@ public class PropertiesTest  {
 		Builder b = new Builder(new PropertiesMappingStrategy(),null); 
 		DataMapper<PropertiesTestClass> TestClassMapper = b.build(PropertiesTestClass.class); 
 		String nameTable = (String) getValue(TestClassMapper, "nameTable");
-		ColumnInfo primaryKey = (ColumnInfo) getValue(TestClassMapper, "primaryKey");
+		List<ColumnInfo> primaryKey = (List<ColumnInfo>) ((Map<String, List<ColumnInfo>>) getValue(TestClassMapper, "mapColumns")).get("primaryKey");
 		@SuppressWarnings("unchecked")
 		List<ColumnInfo> columnsInfo = (List<ColumnInfo>) getValue(TestClassMapper, "columnsInfo");
-		assertEquals("TestClassID",primaryKey.getName());   
+		assertEquals("TestClassID",primaryKey.get(0).getName());   
         assertEquals("TestClasses",nameTable);        
         assertEquals(2,columnsInfo.size()); 
 	}

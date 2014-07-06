@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import java.lang.reflect.Field;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 
@@ -38,9 +40,9 @@ public class FieldsTest  {
 		Builder b = new Builder(new FieldsMappingStrategy(),null); 
 		DataMapper<TestClass> TestClassMapper = b.build(TestClass.class); 
 		String nameTable = (String) getValue(TestClassMapper, "nameTable");
-		ColumnInfo primaryKey = (ColumnInfo) getValue(TestClassMapper, "primaryKey");
+		List<ColumnInfo> primaryKey = (List<ColumnInfo>) ((Map<String, List<ColumnInfo>>) getValue(TestClassMapper, "mapColumns")).get("primaryKey");
 		
-		assertEquals("TestClassID",primaryKey.getName());   
+		assertEquals("TestClassID",primaryKey.get(0).getName());   
         assertEquals(TableName,nameTable);        
 	}
 

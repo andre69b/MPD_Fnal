@@ -16,6 +16,7 @@ public class SingleCallTest  {
 	@Test
 	public void SingleCall() throws SQLException{
 		SingleCall sc = new SingleCall();
+		sc.beginTransaction(false);
 		Connection c =sc.getConnection();
 		
 		PreparedStatement cmd = c.prepareStatement(
