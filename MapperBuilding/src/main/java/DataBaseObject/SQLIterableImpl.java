@@ -96,8 +96,8 @@ public class SQLIterableImpl<T> implements SQLIterable<T> {
 		return new Iterator<T>() {
 			T next;
 			boolean containsNext = false;
-			List<ColumnInfo> columnsInfo = mapColumns.get("ColumnInfo");
-			List<ColumnInfo> foreignKeyObjects = mapColumns.get("ForeignKeyObject");
+			List<ColumnInfo> foreignKeyObjects;
+			List<ColumnInfo> columnsInfo;
 			
 			@Override
 			public boolean hasNext() {
@@ -105,6 +105,8 @@ public class SQLIterableImpl<T> implements SQLIterable<T> {
 					if (containsNext)
 						return true;
 					if (rs.next()) {
+						columnsInfo = mapColumns.get("ColumnInfo");
+						foreignKeyObjects = mapColumns.get("ForeignKeyObject");
 						next = klass.newInstance();
 						int auxIndex = 0;
 
@@ -113,16 +115,17 @@ public class SQLIterableImpl<T> implements SQLIterable<T> {
 									.get(auxIndex++).getName()));
 						}
 						
-						for (ColumnInfo c : foreignKeyObjects) {
-							ForeignkeyObject fO = (ForeignkeyObject)c;
-							c.set(next,
-								  columnsInfo.stream()
-									  .filter(x->x.getName().equals(fO.attributeName))
-									  .findFirst()
-									  .get()
-									  .get(next));
+						if(foreignKeyObjects!=null){
+							for (ColumnInfo c : foreignKeyObjects) {
+								ForeignkeyObject fO = (ForeignkeyObject)c;
+								c.set(next,
+									  columnsInfo.stream()
+										  .filter(x->x.getName().equals(fO.attributeName))
+										  .findFirst()
+										  .get()
+										  .get(next));
+							}	
 						}
-
 						containsNext = true;
 						return true;
 					}
