@@ -42,15 +42,14 @@ public class ForeignkeyObject<T> implements ColumnInfo {
 
 	@Override
 	public void set(Object instance, Object valueAttributeName) {
-		ColumnInfo primaryKey = mapColumnsInfo.get("primaryKey").get(0);
 		if (type.equals(Association.Multiple)) {
 			Iterable<T> iter = new DataMapperSQL<T>(table, connStr, klass,
-					mapColumnsInfo, primaryKey).getAll().where(keyName + " = ?")
+					mapColumnsInfo).getAll().where(keyName + " = ?")
 					.bind(valueAttributeName);
 			ci.set(instance, iter);
 		} else {
-			T t = new DataMapperSQL<T>(table, connStr, klass, mapColumnsInfo,
-					primaryKey).getById(valueAttributeName,keyName);			
+			T t = new DataMapperSQL<T>(table, connStr, klass, mapColumnsInfo)
+					.getById(valueAttributeName, keyName);
 			ci.set(instance, t);
 		}
 	}

@@ -10,7 +10,7 @@ public interface DataMapper<T> {
 
 	public void delete(T val);
 
-	public void insert(T val);
+	public int insert(T val);
 
 	public T getById(Object key, String attributeName);
 }

@@ -23,7 +23,6 @@ import Strategy.Connections.ConnectionStrategy;
 public abstract class AbstractMapping implements MappingStrategy {
 	private final int LEVEL = 1;
 	private int currentLevel = 0;
-	private ColumnInfo primaryKey;
 	private ConnectionStrategy connStr;
 
 	@Override
@@ -35,11 +34,10 @@ public abstract class AbstractMapping implements MappingStrategy {
 			throw new MyRuntimeException(new UnsupportedOperationException(
 					"All ED must have an EDTableAttribute with its TableName!"));
 
-		primaryKey = null;
 		Map<String, List<ColumnInfo>> mapColumns = getColumnInfoAndFillPrimaryKey(klass);
 
 		return new DataMapperSQL<T>(Table.TableName(), connStr, klass,
-				mapColumns, primaryKey);
+				mapColumns);
 	}
 
 	protected abstract <T> Member[] getMembers(Class<T> klass);
