@@ -22,8 +22,10 @@ public class FieldsTest  {
 		
 		@PrimaryKey
 		public String TestClassID;
+		@SuppressWarnings("unused")
 		public String what;
 		
+		@SuppressWarnings("unused")
 		public TestClass(String TestClassID, String what) {
 			this.TestClassID = TestClassID;
 			this.what = what;

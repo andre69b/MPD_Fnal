@@ -23,6 +23,7 @@ public class PropertiesTest  {
 		DataMapper<PropertiesTestClass> TestClassMapper = b.build(PropertiesTestClass.class); 
 		String nameTable = (String) getValue(TestClassMapper, "nameTable");
 		ColumnInfo primaryKey = (ColumnInfo) getValue(TestClassMapper, "primaryKey");
+		@SuppressWarnings("unchecked")
 		List<ColumnInfo> columnsInfo = (List<ColumnInfo>) getValue(TestClassMapper, "columnsInfo");
 		assertEquals("TestClassID",primaryKey.getName());   
         assertEquals("TestClasses",nameTable);        

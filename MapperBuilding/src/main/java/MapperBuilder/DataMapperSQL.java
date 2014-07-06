@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-import DataBaseObject.SQLExtensionMethods;
 import DataBaseObject.SQLIterableImpl;
 import Exception.MyRuntimeException;
 import Strategy.Connections.ConnectionStrategy;
